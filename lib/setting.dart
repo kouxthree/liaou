@@ -11,7 +11,13 @@ class Setting extends StatefulWidget {
 
 class _Setting extends State<Setting> {
   final BlMain blMain = BlMain();
-  _reScanSetting() {}
+  _reScanSetting() {
+    // var subscription = flutterBlue.scanResults.listen((scanResult) {
+    //   // do something with scan result
+    //   device = scanResult.device;
+    //   print('${device.name} found! rssi: ${scanResult.rssi}');
+    // });
+  }
   //build bluetooth list view
   ListView _buildBluetoothListView() {
     List<Container> lstContainer = [];
