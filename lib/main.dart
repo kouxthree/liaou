@@ -58,6 +58,11 @@ class _LiaoUHomeState extends State<LiaoUHome> {
       });
     });
   }
+  //open setting page & get specific bluetooth device rssi & paint rssi
+  //context: main page context
+  Widget _paintRssi(BuildContext context) {
+    return Setting();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +96,7 @@ class _LiaoUHomeState extends State<LiaoUHome> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Setting()),
+                    MaterialPageRoute(builder: (context) => _paintRssi(context)),
                   );
                 },
                 tooltip: Consts.SETTING_PAGE,

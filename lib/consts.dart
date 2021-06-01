@@ -9,4 +9,5 @@ class Consts {
   static const DEVICE_UNKNOWN = "Device Unknown";
   static const CONNECT = "Connect";
   static const EDGE_INSERT_NUM = 8.0;
+  static const SCAN_TIMEOUT = 4;//scan time(seconds)
 }

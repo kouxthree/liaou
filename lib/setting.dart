@@ -11,17 +11,31 @@ class Setting extends StatefulWidget {
 
 class _Setting extends State<Setting> {
   final BlMain blMain = BlMain();
-  _reScanSetting() {
-    // var subscription = flutterBlue.scanResults.listen((scanResult) {
+  List<ScanResult> _lstScanResult = [];
+  @override
+  void initState() {
+    super.initState();
+    _reScan();
+  }
+  //rescan bluetooth devices
+  Future<void> _reScan() async {
+    setState(() async {
+      _lstScanResult = await blMain.reScan();
+    });
+  }
+  //get specific bluetooth device rssi
+  _getRssi(ScanResult r) {
+    // var subscription = blMain..scanResults.listen((scanResult) {
     //   // do something with scan result
     //   device = scanResult.device;
     //   print('${device.name} found! rssi: ${scanResult.rssi}');
     // });
+    r.rssi;
   }
   //build bluetooth list view
   ListView _buildBluetoothListView() {
     List<Container> lstContainer = [];
-    for (BluetoothDevice d in blMain.lstBluetoothDevice) {
+    for (ScanResult r in _lstScanResult) {
       lstContainer.add(
         Container(
           height: Consts.DEVICE_LIST_ITEM_HEIGHT,
@@ -30,8 +44,8 @@ class _Setting extends State<Setting> {
               Expanded(
                 child: Column(
                   children: <Widget>[
-                    Text(d.name == '' ? Consts.DEVICE_UNKNOWN : d.name),
-                    Text(d.id.toString()),
+                    Text(r.device.name == '' ? Consts.DEVICE_UNKNOWN : r.device.name),
+                    Text(r.device.id.toString()),
                   ],
                 ),
               ),
@@ -42,7 +56,9 @@ class _Setting extends State<Setting> {
                   backgroundColor: Colors.blue,
                   onSurface: Colors.grey,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  _getRssi(r);
+                },
               )
             ],
           ),
@@ -65,7 +81,7 @@ class _Setting extends State<Setting> {
         ),
         body: _buildBluetoothListView(),
         floatingActionButton: FloatingActionButton(
-          onPressed: _reScanSetting,
+          onPressed: _reScan,
           tooltip: Consts.RESCAN,
           child: Icon(Icons.refresh_rounded),
         ),

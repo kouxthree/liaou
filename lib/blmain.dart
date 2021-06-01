@@ -1,45 +1,26 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
+import 'package:liaou/consts.dart';
 
-class BlMain extends StatefulWidget {
-  BlMain({Key? key}) : super(key: key);
+class BlMain {
   final FlutterBlue flutterBlue = FlutterBlue.instance;
-  final List<BluetoothDevice> lstBluetoothDevice = [];
-
-  @override
-  _BlMain createState() => _BlMain();
-}
-
-class _BlMain extends State<BlMain> {
-  //add bluetooth device to list
-  _addBluetoothDeviceToList(final BluetoothDevice d) {
-    if (!widget.lstBluetoothDevice.contains(d)) {
-      setState(() {
-        widget.lstBluetoothDevice.add(d);
-      });
+  final List<ScanResult> lstScanResult = [];
+  //add scan result to list
+  _addScanResultToList(final ScanResult r) {
+    if (!lstScanResult.contains(r)) {
+      lstScanResult.add(r);
     }
   }
-
-  @override
-  void initState() {
-    super.initState();
-    //add connected bluetooth device
-    widget.flutterBlue.connectedDevices
-        .asStream()
-        .listen((List<BluetoothDevice> devices) {
-      for (BluetoothDevice d in devices) {
-        _addBluetoothDeviceToList(d);
-      }
+  Future<List<ScanResult>> reScan() {
+    // lstScanResult.clear();
+    return Future.delayed(Duration(seconds: Consts.SCAN_TIMEOUT), () {
+      //add scanned bluetooth device
+      flutterBlue.scanResults.listen((List<ScanResult> results) {
+        for (ScanResult r in results) {
+          _addScanResultToList(r);
+        }
+      });
+      flutterBlue.startScan();
+      return lstScanResult;
     });
-    //add scanned bluetooth device
-    widget.flutterBlue.scanResults.listen((List<ScanResult> results) {
-      for (ScanResult result in results) {
-        _addBluetoothDeviceToList(result.device);
-      }
-    });
-    widget.flutterBlue.startScan();
   }
-
-  @override
-  Widget build(BuildContext context) => Scaffold();
 }
