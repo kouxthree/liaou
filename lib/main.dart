@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:liaou/permit.dart';
 import 'package:liaou/remoteloc.dart';
 import 'package:liaou/consts.dart';
 import 'package:liaou/locpaint.dart';
@@ -10,6 +11,7 @@ void main() => runApp(LiaoU());
 class LiaoU extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    requestPermission(context);
     return MaterialApp(
       title: Consts.APP_NAME,
       theme: ThemeData(
@@ -18,6 +20,29 @@ class LiaoU extends StatelessWidget {
       home: LiaoUHome(),
     );
   }
+
+  Future<void> requestPermission(BuildContext context) async {
+    Permit permit = Permit();
+    if (!permit.requestPermission()) alert(context);
+  }
+  void alert(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          title: Text(Consts.APP_NAME),
+          content: Text(Consts.PERMISSION_MSG),
+          actions: <Widget>[
+            TextButton(
+              child: Text("OK"),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 }
 
 class LiaoUHome extends StatefulWidget {
@@ -57,6 +82,9 @@ class _LiaoUHomeState extends State<LiaoUHome> {
         item.center = Offset(dx, dy);
       });
     });
+  }
+  //paint a bluetooth device's rssi (sample points)
+  void paintRssi(List<int> lstRssi) {
   }
 
   @override
