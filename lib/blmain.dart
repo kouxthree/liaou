@@ -1,45 +1,29 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
+import 'package:liaou/consts.dart';
 
-class BlMain extends StatefulWidget {
-  BlMain({Key? key}) : super(key: key);
-  final FlutterBlue flutterBlue = FlutterBlue.instance;
-  final List<BluetoothDevice> lstBluetoothDevice = [];
+class BlMain {
+  final flutterBlue = FlutterBlue.instance;
+  final List<ScanResult> lstBluetoothDevice = [];
 
-  @override
-  _BlMain createState() => _BlMain();
-}
-
-class _BlMain extends State<BlMain> {
-  //add bluetooth device to list
-  _addBluetoothDeviceToList(final BluetoothDevice d) {
-    if (!widget.lstBluetoothDevice.contains(d)) {
-      setState(() {
-        widget.lstBluetoothDevice.add(d);
-      });
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    //add connected bluetooth device
-    widget.flutterBlue.connectedDevices
-        .asStream()
-        .listen((List<BluetoothDevice> devices) {
-      for (BluetoothDevice d in devices) {
-        _addBluetoothDeviceToList(d);
+  //refresh scanned bluetooth devices list
+  refreshDeviceList() {
+    // lstBluetoothDevice.clear();
+    // Start scanning
+    flutterBlue.startScan(timeout: Duration(seconds: Consts.SCAN_TIMEOUT));
+    //add scanned devices to list
+    flutterBlue.scanResults.listen((results) {
+      for (ScanResult r in results) {
+        final knownDeviceIndex =
+            lstBluetoothDevice.indexWhere((d) => d.device.id == r.device.id);
+        if (knownDeviceIndex >= 0) {
+          lstBluetoothDevice[knownDeviceIndex] = r;
+        } else {
+          lstBluetoothDevice.add(r);
+        }
       }
     });
-    //add scanned bluetooth device
-    widget.flutterBlue.scanResults.listen((List<ScanResult> results) {
-      for (ScanResult result in results) {
-        _addBluetoothDeviceToList(result.device);
-      }
-    });
-    widget.flutterBlue.startScan();
+    // Stop scanning
+    new Future.delayed(const Duration(seconds: Consts.SCAN_TIMEOUT),
+        () => flutterBlue.stopScan());
   }
-
-  @override
-  Widget build(BuildContext context) => Scaffold();
 }

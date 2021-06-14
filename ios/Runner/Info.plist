@@ -3,8 +3,8 @@
 <plist version="1.0">
 <dict>
 
-<!--xguang for flutter_blue-->
-	    <key>NSBluetoothAlwaysUsageDescription</key>
+<!--xguang-->
+<key>NSBluetoothAlwaysUsageDescription</key>
 	    <string>Need BLE permission</string>
 	    <key>NSBluetoothPeripheralUsageDescription</key>
 	    <string>Need BLE permission</string>

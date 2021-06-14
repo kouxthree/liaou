@@ -95,11 +95,13 @@ class _LiaoUHomeState extends State<LiaoUHome> {
                   );
                 },
                 tooltip: Consts.SETTING_PAGE,
+                heroTag: 'setting',
                 child: Icon(Icons.settings),
               ),
               FloatingActionButton(
                 onPressed: _reScan,
                 tooltip: Consts.RESCAN,
+                heroTag: 'rescan',
                 child: Icon(Icons.refresh_rounded),
               )
             ],

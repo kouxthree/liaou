@@ -10,18 +10,20 @@ class Setting extends StatefulWidget {
 }
 
 class _Setting extends State<Setting> {
-  final BlMain blMain = BlMain();
+  final blMain = BlMain();
+  @override
+  void initState() {
+    super.initState();
+    setState(() => blMain.refreshDeviceList());
+  }
+
   _reScanSetting() {
-    // var subscription = flutterBlue.scanResults.listen((scanResult) {
-    //   // do something with scan result
-    //   device = scanResult.device;
-    //   print('${device.name} found! rssi: ${scanResult.rssi}');
-    // });
+    setState(() => blMain.refreshDeviceList());
   }
   //build bluetooth list view
   ListView _buildBluetoothListView() {
     List<Container> lstContainer = [];
-    for (BluetoothDevice d in blMain.lstBluetoothDevice) {
+    for (ScanResult d in blMain.lstBluetoothDevice) {
       lstContainer.add(
         Container(
           height: Consts.DEVICE_LIST_ITEM_HEIGHT,
@@ -30,8 +32,8 @@ class _Setting extends State<Setting> {
               Expanded(
                 child: Column(
                   children: <Widget>[
-                    Text(d.name == '' ? Consts.DEVICE_UNKNOWN : d.name),
-                    Text(d.id.toString()),
+                    Text(d.device.name == '' ? Consts.DEVICE_UNKNOWN : d.device.name),
+                    Text(d.device.id.toString()),
                   ],
                 ),
               ),
