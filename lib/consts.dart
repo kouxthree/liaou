@@ -9,5 +9,5 @@ class Consts {
   static const GET_RSSI_SAMPLES = "Get Rssi Samples";
   static const EDGE_INSERT_NUM = 8.0;
   static const SCAN_TIMEOUT = 4;//scan time(seconds)
-  static const PERMISSION_MSG = "Please Grant Us Bluetooth And Location Permission.";
+  static const PERMISSION_MSG = "Bluetooth And Location Is Necessary.";
 }

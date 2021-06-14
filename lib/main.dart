@@ -11,35 +11,12 @@ void main() => runApp(LiaoU());
 class LiaoU extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    requestPermission(context);
     return MaterialApp(
       title: Consts.APP_NAME,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
       home: LiaoUHome(),
-    );
-  }
-
-  Future<void> requestPermission(BuildContext context) async {
-    Permit permit = Permit();
-    if (!permit.requestPermission()) alert(context);
-  }
-  void alert(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (_) {
-        return AlertDialog(
-          title: Text(Consts.APP_NAME),
-          content: Text(Consts.PERMISSION_MSG),
-          actions: <Widget>[
-            TextButton(
-              child: Text("OK"),
-              onPressed: () => Navigator.pop(context),
-            ),
-          ],
-        );
-      },
     );
   }
 
@@ -57,6 +34,7 @@ class _LiaoUHomeState extends State<LiaoUHome> {
   final _locNums = 3; //locations
   final _locRadius = 5.0; //location circle radius
   _LiaoUHomeState() {
+    requestPermission();//request permission
     for (var i = 0; i < _locNums; i++) {
       RemoteLoc item = RemoteLoc()..id = i;
       item.center = new Offset(10.0 * (i + 1), 10.0 * (i + 1));
@@ -71,8 +49,33 @@ class _LiaoUHomeState extends State<LiaoUHome> {
     }
   }
 
+  //an alert dialog
+  void alert(String msg) {
+    showDialog(
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          title: Text(Consts.APP_NAME),
+          content: Text(msg),
+          actions: <Widget>[
+            TextButton(
+              child: Text("OK"),
+              onPressed: () => Navigator.pop(context),//openAppSettings(),
+            ),
+          ],
+        );
+      },
+    );
+  }
+  //permission request
+  void requestPermission() async {
+    Permit permit = Permit();
+    if (!await permit.requestPermission()) alert(Consts.PERMISSION_MSG);
+  }
+
   //scan remote locations
   void _reScan() {
+    requestPermission();
     setState(() {
       _lstRemoteLocs.forEach((item) {
         double dx = item.center.dx + 10;
