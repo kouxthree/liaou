@@ -11,6 +11,7 @@ void main() => runApp(LiaoU());
 class LiaoU extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    requestPermission(context);
     return MaterialApp(
       title: Consts.APP_NAME,
       theme: ThemeData(
@@ -22,7 +23,7 @@ class LiaoU extends StatelessWidget {
 
   Future<void> requestPermission(BuildContext context) async {
     Permit permit = Permit();
-    if (!await permit.requestPermission()) alert(context);
+    if (!permit.requestPermission()) alert(context);
   }
   void alert(BuildContext context) {
     showDialog(
