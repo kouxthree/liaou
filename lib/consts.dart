@@ -14,6 +14,12 @@ class Consts {
   static const PERMISSION_MSG = "Bluetooth And Location Is Necessary.";
 }
 
+//stored shared-preference key
+enum PrefKey {
+  Gender,
+  SendSignal,
+}
+
 enum Gender {
   Male,
   Female,

@@ -1,7 +1,7 @@
 //paint (remote) location
 import 'package:flutter/material.dart';
-import 'package:liaou/sizeutil.dart';
-import 'package:liaou/remoteloc.dart';
+import 'sizeutil.dart';
+import 'remoteloc.dart';
 
 class LocPaint extends CustomPainter {
   List<RemoteLoc> _lstRemoteLocs = [];

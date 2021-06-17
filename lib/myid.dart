@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:liaou/consts.dart';
 import 'package:emojis/emojis.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'consts.dart';
 
 class MyId extends StatefulWidget {
   MyId({Key? key}) : super(key: key);
@@ -21,16 +22,23 @@ class _MyId extends State<MyId> {
   BoxDecoration _maleDecoration = BoxDecoration();
   BoxDecoration _feMaleDecoration = BoxDecoration();
   List<BoxDecoration> _lstSendSignalDecoration = [];
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   @override
   void initState() {
     super.initState();
-    genderTapped(Gender.Female);
     int len = SendSignal.values.length;
     for (int i = 0; i < len; i++) {
       _lstSendSignalDecoration.add(new BoxDecoration());
     }
-    sendSinalTapped(SendSignal.Purple);
+    _setInitData();//set stored my id info
+  }
+
+  void _setInitData() async {
+    int genderidx = await readGenderIndex();
+    int signalidx = await readSendSignalIndex();
+    if (genderidx >= 0) genderTapped(Gender.values[genderidx]);
+    if (signalidx >= 0) sendSignalTapped(SendSignal.values[signalidx]);
   }
 
   @override
@@ -43,37 +51,7 @@ class _MyId extends State<MyId> {
     );
   }
 
-  genderTapped(Gender gender) {
-    setState(() {
-      switch (gender) {
-        case Gender.Male:
-          _maleDecoration = _selectedBox;
-          _feMaleDecoration = _unSelectedBox;
-          break;
-        case Gender.Female:
-          _maleDecoration = _unSelectedBox;
-          _feMaleDecoration = _selectedBox;
-          break;
-        default:
-          break;
-      }
-    });
-  }
-
-  sendSinalTapped(SendSignal signal) {
-    setState(() {
-      int len = SendSignal.values.length;
-      int selectedIdx = signal.index;
-      for (int i = 0; i < len; i++) {
-        if (i == selectedIdx) {
-          _lstSendSignalDecoration[i] = _selectedBox;
-        } else {
-          _lstSendSignalDecoration[i] = _unSelectedBox;
-        }
-      }
-    });
-  }
-
+  //build myid page
   Widget _buildMyId() {
     var icon_id = Container(
       height: 80,
@@ -122,7 +100,7 @@ class _MyId extends State<MyId> {
           Column(
             children: [
               InkWell(
-                onTap: () => sendSinalTapped(SendSignal.Orange),
+                onTap: () => sendSignalTapped(SendSignal.Orange),
                 child: Container(
                   child: Icon(Icons.circle, size: 80, color: Colors.orange),
                   decoration: _lstSendSignalDecoration[SendSignal.Orange.index],
@@ -133,7 +111,7 @@ class _MyId extends State<MyId> {
           Column(
             children: [
               InkWell(
-                onTap: () => sendSinalTapped(SendSignal.Blue),
+                onTap: () => sendSignalTapped(SendSignal.Blue),
                 child: Container(
                   child: Icon(Icons.circle, size: 80, color: Colors.blue),
                   decoration: _lstSendSignalDecoration[SendSignal.Blue.index],
@@ -144,10 +122,10 @@ class _MyId extends State<MyId> {
           Column(
             children: [
               InkWell(
-                onTap: () => sendSinalTapped(SendSignal.Purple),
+                onTap: () => sendSignalTapped(SendSignal.Purple),
                 child: Container(
                   child: Icon(Icons.circle, size: 80, color: Colors.purple),
-                  decoration:  _lstSendSignalDecoration[SendSignal.Purple.index],
+                  decoration: _lstSendSignalDecoration[SendSignal.Purple.index],
                 ),
               ),
             ],
@@ -155,10 +133,10 @@ class _MyId extends State<MyId> {
           Column(
             children: [
               InkWell(
-                onTap: () => sendSinalTapped(SendSignal.Green),
+                onTap: () => sendSignalTapped(SendSignal.Green),
                 child: Container(
                   child: Icon(Icons.circle, size: 80, color: Colors.green),
-                  decoration:  _lstSendSignalDecoration[SendSignal.Green.index],
+                  decoration: _lstSendSignalDecoration[SendSignal.Green.index],
                 ),
               ),
             ],
@@ -176,5 +154,61 @@ class _MyId extends State<MyId> {
         ],
       ),
     );
+  }
+
+  //gender icons tapped
+  genderTapped(Gender gender) async {
+    setState(() {
+      switch (gender) {
+        case Gender.Male:
+          _maleDecoration = _selectedBox;
+          _feMaleDecoration = _unSelectedBox;
+          break;
+        case Gender.Female:
+          _maleDecoration = _unSelectedBox;
+          _feMaleDecoration = _selectedBox;
+          break;
+        default:
+          break;
+      }
+    });
+    saveGender(gender);//save data
+  }
+
+  //send signal icons tapped
+  sendSignalTapped(SendSignal signal) async {
+    setState(() {
+      int len = SendSignal.values.length;
+      int selectedIdx = signal.index;
+      for (int i = 0; i < len; i++) {
+        if (i == selectedIdx) {
+          _lstSendSignalDecoration[i] = _selectedBox;
+        } else {
+          _lstSendSignalDecoration[i] = _unSelectedBox;
+        }
+      }
+    });
+    saveSendSignal(signal);//save data
+  }
+
+  Future<void> saveGender(Gender gender) async {
+    final SharedPreferences prefs = await _prefs;
+    prefs.setInt(PrefKey.Gender.toString(), gender.index);
+  }
+
+  Future<void> saveSendSignal(SendSignal signal) async {
+    final SharedPreferences prefs = await _prefs;
+    await prefs.setInt(PrefKey.SendSignal.toString(), signal.index);
+  }
+
+  Future<int> readGenderIndex() async {
+    final SharedPreferences prefs = await _prefs;
+    int? a = prefs.getInt(PrefKey.Gender.toString());
+    return prefs.getInt(PrefKey.Gender.toString()) ?? -1;
+  }
+
+  Future<int> readSendSignalIndex() async {
+    final SharedPreferences prefs = await _prefs;
+    return prefs.getInt(PrefKey.SendSignal.toString()) ?? -1;
   }
 }

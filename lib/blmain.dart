@@ -1,5 +1,5 @@
 import 'package:flutter_blue/flutter_blue.dart';
-import 'package:liaou/consts.dart';
+import 'consts.dart';
 
 class BlMain {
   final FlutterBlue flutterBlue = FlutterBlue.instance;

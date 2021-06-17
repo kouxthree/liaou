@@ -31,6 +31,7 @@ dependencies:
   flutter_blue: ^0.8.0
   permission_handler: ^8.1.0
   emojis: ^0.9.3
+  shared_preferences: ^2.0.6
 
 dev_dependencies:
   flutter_test:
