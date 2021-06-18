@@ -13,7 +13,7 @@ class MyId extends StatefulWidget {
 
 class _MyId extends State<MyId> {
   BoxDecoration _maleDecoration = BoxDecoration();
-  BoxDecoration _feMaleDecoration = BoxDecoration();
+  BoxDecoration _femaleDecoration = BoxDecoration();
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   @override
@@ -68,7 +68,7 @@ class _MyId extends State<MyId> {
                     genderTapped(Gender.Female), // handle your onTap here
                 child: Container(
                   child: Text(Emojis.woman, style: TextStyle(fontSize: 80)),
-                  decoration: _feMaleDecoration,
+                  decoration: _femaleDecoration,
                 ),
               ),
             ],
@@ -95,11 +95,11 @@ class _MyId extends State<MyId> {
       switch (gender) {
         case Gender.Male:
           _maleDecoration = SharedParts.SelectedBox;
-          _feMaleDecoration = SharedParts.UnSelectedBox;
+          _femaleDecoration = SharedParts.UnSelectedBox;
           break;
         case Gender.Female:
           _maleDecoration = SharedParts.UnSelectedBox;
-          _feMaleDecoration = SharedParts.SelectedBox;
+          _femaleDecoration = SharedParts.SelectedBox;
           break;
         default:
           break;
