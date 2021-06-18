@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:emojis/emojis.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'consts.dart';
+import 'package:liaou/consts.dart';
+import 'package:liaou/parts/ssignal.dart';
+import 'package:liaou/parts/sharedparts.dart';
 
 class MyId extends StatefulWidget {
   MyId({Key? key}) : super(key: key);
@@ -10,50 +12,31 @@ class MyId extends StatefulWidget {
 }
 
 class _MyId extends State<MyId> {
-  BoxDecoration _selectedBox = BoxDecoration(
-    color: Colors.yellow[100],
-    border: Border.all(
-      color: Colors.red,
-      width: 5,
-    ),
-    borderRadius: BorderRadius.circular(20),
-  );
-  BoxDecoration _unSelectedBox = BoxDecoration();
   BoxDecoration _maleDecoration = BoxDecoration();
   BoxDecoration _feMaleDecoration = BoxDecoration();
-  List<BoxDecoration> _lstSendSignalDecoration = [];
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   @override
   void initState() {
     super.initState();
-    int len = SendSignal.values.length;
-    for (int i = 0; i < len; i++) {
-      _lstSendSignalDecoration.add(new BoxDecoration());
-    }
     _setInitData();//set stored my id info
   }
 
   void _setInitData() async {
     int genderidx = await readGenderIndex();
-    int signalidx = await readSendSignalIndex();
     if (genderidx >= 0) genderTapped(Gender.values[genderidx]);
-    if (signalidx >= 0) sendSignalTapped(SendSignal.values[signalidx]);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text(Consts.MY_ID_PAGE),
-      // ),
       body: Center(child: _buildMyId()),
     );
   }
 
   //build myid page
   Widget _buildMyId() {
-    var icon_id = Container(
+    var _icon_id = Container(
       height: 80,
       padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
       child: ClipRRect(
@@ -64,7 +47,7 @@ class _MyId extends State<MyId> {
         ),
       ),
     );
-    var icon_gender = Container(
+    var _icon_gender = Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -93,64 +76,14 @@ class _MyId extends State<MyId> {
         ],
       ),
     );
-    var icon_send_signal = Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Column(
-            children: [
-              InkWell(
-                onTap: () => sendSignalTapped(SendSignal.Orange),
-                child: Container(
-                  child: Icon(Icons.circle, size: 80, color: Colors.orange),
-                  decoration: _lstSendSignalDecoration[SendSignal.Orange.index],
-                ),
-              ),
-            ],
-          ),
-          Column(
-            children: [
-              InkWell(
-                onTap: () => sendSignalTapped(SendSignal.Blue),
-                child: Container(
-                  child: Icon(Icons.circle, size: 80, color: Colors.blue),
-                  decoration: _lstSendSignalDecoration[SendSignal.Blue.index],
-                ),
-              ),
-            ],
-          ),
-          Column(
-            children: [
-              InkWell(
-                onTap: () => sendSignalTapped(SendSignal.Purple),
-                child: Container(
-                  child: Icon(Icons.circle, size: 80, color: Colors.purple),
-                  decoration: _lstSendSignalDecoration[SendSignal.Purple.index],
-                ),
-              ),
-            ],
-          ),
-          Column(
-            children: [
-              InkWell(
-                onTap: () => sendSignalTapped(SendSignal.Green),
-                child: Container(
-                  child: Icon(Icons.circle, size: 80, color: Colors.green),
-                  decoration: _lstSendSignalDecoration[SendSignal.Green.index],
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
+    var _icon_send_signal = SSignal();
     return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          icon_id,
-          icon_gender,
-          icon_send_signal,
+          _icon_id,
+          _icon_gender,
+          _icon_send_signal,
         ],
       ),
     );
@@ -161,12 +94,12 @@ class _MyId extends State<MyId> {
     setState(() {
       switch (gender) {
         case Gender.Male:
-          _maleDecoration = _selectedBox;
-          _feMaleDecoration = _unSelectedBox;
+          _maleDecoration = SharedParts.SelectedBox;
+          _feMaleDecoration = SharedParts.UnSelectedBox;
           break;
         case Gender.Female:
-          _maleDecoration = _unSelectedBox;
-          _feMaleDecoration = _selectedBox;
+          _maleDecoration = SharedParts.UnSelectedBox;
+          _feMaleDecoration = SharedParts.SelectedBox;
           break;
         default:
           break;
@@ -175,40 +108,14 @@ class _MyId extends State<MyId> {
     saveGender(gender);//save data
   }
 
-  //send signal icons tapped
-  sendSignalTapped(SendSignal signal) async {
-    setState(() {
-      int len = SendSignal.values.length;
-      int selectedIdx = signal.index;
-      for (int i = 0; i < len; i++) {
-        if (i == selectedIdx) {
-          _lstSendSignalDecoration[i] = _selectedBox;
-        } else {
-          _lstSendSignalDecoration[i] = _unSelectedBox;
-        }
-      }
-    });
-    saveSendSignal(signal);//save data
-  }
-
   Future<void> saveGender(Gender gender) async {
     final SharedPreferences prefs = await _prefs;
     prefs.setInt(PrefKey.Gender.toString(), gender.index);
   }
 
-  Future<void> saveSendSignal(SendSignal signal) async {
-    final SharedPreferences prefs = await _prefs;
-    await prefs.setInt(PrefKey.SendSignal.toString(), signal.index);
-  }
-
   Future<int> readGenderIndex() async {
     final SharedPreferences prefs = await _prefs;
-    int? a = prefs.getInt(PrefKey.Gender.toString());
     return prefs.getInt(PrefKey.Gender.toString()) ?? -1;
   }
 
-  Future<int> readSendSignalIndex() async {
-    final SharedPreferences prefs = await _prefs;
-    return prefs.getInt(PrefKey.SendSignal.toString()) ?? -1;
-  }
 }
