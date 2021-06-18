@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:emojis/emojis.dart';
+import 'package:liaou/parts/ssignal.dart';
 import 'remoteloc.dart';
 import 'sizeutil.dart';
 import 'consts.dart';
@@ -62,12 +63,30 @@ class _MyHome extends State<MyHome> {
       body: Container(
         // width: SizeUtil.width,
         // height: SizeUtil.height,
-        child: CustomPaint(
-          painter: LocPaint(_lstRemoteLocs), //paint remote location
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            CustomPaint(
+              painter: LocPaint(_lstRemoteLocs), //paint remote location
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _searchIcon,
+                SSignal(),
+                FloatingActionButton(
+                  onPressed: _onSendIconTapped,
+                  child: Icon(Icons.present_to_all),
+                  backgroundColor: Colors.red,
+                ),
+              ],
+            ),
+          ],
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.miniStartDocked,
-      floatingActionButton: _searchIcon,
+      // floatingActionButtonLocation:
+      //     FloatingActionButtonLocation.miniStartDocked,
+      // floatingActionButton: _searchIcon,
     );
   }
 
@@ -100,6 +119,13 @@ class _MyHome extends State<MyHome> {
         _searchIcon = getSearchIcon(true);
         searchingFlag = true; //turn on searching
       }
+    });
+  }
+
+  //send icon tapped
+  void _onSendIconTapped() {
+    setState(() {
+
     });
   }
 }

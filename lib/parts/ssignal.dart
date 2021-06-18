@@ -41,6 +41,7 @@ class _SSignal extends State<SSignal> {
                 child: Container(
                   child: Icon(Icons.circle, size: 80, color: Colors.orange),
                   decoration: _lstSendSignalDecoration[SendSignal.Orange.index],
+
                 ),
               ),
             ],
