@@ -124,8 +124,6 @@ class _MyHome extends State<MyHome> {
 
   //send icon tapped
   void _onSendIconTapped() {
-    setState(() {
-
-    });
+    setState(() {});
   }
 }

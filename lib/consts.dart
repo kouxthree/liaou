@@ -18,6 +18,7 @@ class Consts {
 enum PrefKey {
   Gender,
   SendSignal,
+  SignalType,
 }
 
 enum Gender {
@@ -30,4 +31,9 @@ enum SendSignal {
   Blue,
   Purple,
   Green,
+}
+
+enum SignalType {
+  Audio,
+  Flash,
 }

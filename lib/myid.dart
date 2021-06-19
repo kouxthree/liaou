@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:emojis/emojis.dart';
+import 'package:liaou/parts/signaltypeparts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:liaou/consts.dart';
 import 'package:liaou/parts/ssignal.dart';
@@ -19,7 +20,7 @@ class _MyId extends State<MyId> {
   @override
   void initState() {
     super.initState();
-    _setInitData();//set stored my id info
+    _setInitData(); //set stored my id info
   }
 
   void _setInitData() async {
@@ -53,7 +54,7 @@ class _MyId extends State<MyId> {
         children: [
           Column(mainAxisAlignment: MainAxisAlignment.center, children: [
             InkWell(
-              onTap: () => genderTapped(Gender.Male), // handle your onTap here
+              onTap: () => genderTapped(Gender.Male),
               child: Container(
                 child: Text(Emojis.man, style: TextStyle(fontSize: 80)),
                 decoration: _maleDecoration,
@@ -76,15 +77,19 @@ class _MyId extends State<MyId> {
         ],
       ),
     );
-    var _icon_send_signal = SSignal();
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _icon_id,
-          _icon_gender,
-          _icon_send_signal,
-        ],
+    var _icon_signaltype = SignalTypeParts();
+    var _icon_send_ignal = SSignal();
+    return SingleChildScrollView(
+      child: Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            _icon_id,
+            _icon_gender,
+            _icon_signaltype,
+            _icon_send_ignal,
+          ],
+        ),
       ),
     );
   }
@@ -105,7 +110,7 @@ class _MyId extends State<MyId> {
           break;
       }
     });
-    saveGender(gender);//save data
+    saveGender(gender); //save data
   }
 
   Future<void> saveGender(Gender gender) async {
@@ -117,5 +122,4 @@ class _MyId extends State<MyId> {
     final SharedPreferences prefs = await _prefs;
     return prefs.getInt(PrefKey.Gender.toString()) ?? -1;
   }
-
 }
