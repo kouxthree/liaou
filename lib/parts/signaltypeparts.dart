@@ -44,15 +44,37 @@ class _SignalTypeParts extends State<SignalTypeParts> {
   Widget build(BuildContext context) {
     return Container(
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Column(
-            children: [
-              GestureDetector(
-                onVerticalDragEnd: (detail) => SignalTypePartsSwiped(detail),
-                child: _signaltype,
-              ),
-            ],
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 250),
+            transitionBuilder: (Widget child, Animation<double> animation) {
+              return ScaleTransition(child: child, scale: animation);
+              // final offsetAnimation = TweenSequence([
+              //   TweenSequenceItem(
+              //       tween: Tween<Offset>(begin:  Offset.zero, end: Offset(0.0, 1.0)),
+              //       weight: 1),
+              //   TweenSequenceItem(tween: ConstantTween(Offset.zero), weight: 3),
+              //   TweenSequenceItem(
+              //       tween: Tween<Offset>(begin: Offset(0.0, -1.0), end: Offset.zero),
+              //       weight: 1)
+              // ]).animate(animation);
+              // final offsetAnimation = Tween<Offset>(
+              //   begin: Offset.zero,
+              //   end: const Offset(0.0, 0.3),
+              // ).animate(animation);
+              // return ClipRect(
+              //   child: SlideTransition(
+              //     position: offsetAnimation,
+              //     child: child,
+              //   ),
+              // );
+            },
+            child: GestureDetector(
+              onVerticalDragEnd: (detail) => SignalTypePartsSwiped(detail),
+              child: _signaltype,
+              key: ValueKey<int>(_signaltypeidx),
+            ),
           ),
         ],
       ),
