@@ -9,9 +9,22 @@ class SignalTypeParts extends StatefulWidget {
 }
 
 class _SignalTypeParts extends State<SignalTypeParts> {
+  //   with SingleTickerProviderStateMixin {
+  // late final AnimationController _animateController = AnimationController(
+  //   duration: const Duration(seconds: 2),
+  //   vsync: this,
+  // )..repeat(reverse: true);
+  // late final Animation<Offset> _offsetAnimation = Tween<Offset>(
+  //   begin: Offset.zero,
+  //   end: const Offset(0.0, 0.3),
+  // ).animate(CurvedAnimation(
+  //   parent: _animateController,
+  //   curve: Curves.elasticIn,
+  // ));
+
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  Icon _audio = Icon(Icons.volume_up_sharp, size: 60);
-  Icon _flash = Icon(Icons.flash_on, size: 60);
+  Icon _audio = Icon(Icons.volume_up_sharp, size: 60, color: Colors.blue);
+  Icon _flash = Icon(Icons.flash_on, size: 60, color: Colors.red);
   int _signaltypeidx = SignalType.Audio.index;
   var _signaltype;
 
@@ -23,7 +36,8 @@ class _SignalTypeParts extends State<SignalTypeParts> {
 
   void _setInitData() async {
     _signaltypeidx = await readSignalTypeParts();
-    if(_signaltypeidx >= 0) _signaltype = getSignalTypeIcon(_signaltypeidx);
+    if (_signaltypeidx <= 0) _signaltypeidx = SignalType.Audio.index;
+    _signaltype = getSignalTypeIcon(_signaltypeidx);
   }
 
   @override
@@ -45,10 +59,22 @@ class _SignalTypeParts extends State<SignalTypeParts> {
     );
   }
 
-  Icon getSignalTypeIcon(int signaltypeidx) {
+  Widget getSignalTypeIcon(int signaltypeidx) {
     Icon signaltype = _audio;
     if (signaltypeidx == SignalType.Flash.index) signaltype = _flash;
-    return signaltype;
+    // return signaltype;
+    return Container(
+      child: signaltype,
+      //child: SlideTransition(position: _offsetAnimation, child: signaltype),
+      decoration: BoxDecoration(
+        color: Colors.blue[100],
+        border: Border.all(
+          color: Colors.black,
+          // width: 3,
+        ),
+        borderRadius: BorderRadius.circular(45),
+      ),
+    );
   }
 
   //signal type swipped

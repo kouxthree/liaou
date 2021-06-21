@@ -79,10 +79,18 @@ class _MyId extends State<MyId> {
     );
     var _icon_signaltype = SignalTypeParts();
     var _icon_send_ignal = SSignal();
+    // return ListView(
+    //   children: [
+    //     _icon_id,
+    //     _icon_gender,
+    //     _icon_signaltype,
+    //     _icon_send_ignal,
+    //   ],
+    // );
     return SingleChildScrollView(
       child: Container(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             _icon_id,
             _icon_gender,
