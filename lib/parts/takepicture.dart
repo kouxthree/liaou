@@ -7,11 +7,7 @@ import 'package:flutter/material.dart';
 class TakePicture extends StatelessWidget {
   var _firstCamera;
 
-  TakePicture() {
-    init();
-  }
-
-  Future<void> init() async {
+  Future<void> initcamera() async {
     // Ensure that plugin services are initialized so that `availableCameras()`
     // can be called before `runApp()`
     WidgetsFlutterBinding.ensureInitialized();
@@ -20,16 +16,34 @@ class TakePicture extends StatelessWidget {
     final cameras = await availableCameras();
 
     // Get a specific camera from the list of available cameras.
-    final firstCamera = cameras.first;
+    _firstCamera = cameras.first;
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData.dark(),
-      home: TakePictureScreen(
-        // Pass the appropriate camera to the TakePictureScreen widget.
-        camera: _firstCamera,
+    // return  MaterialApp(
+    //   home: TakePictureScreen(
+    //     // Pass the appropriate camera to the TakePictureScreen widget.
+    //     camera: _firstCamera,
+    //   ),
+    // );
+    return Scaffold(
+      body: FutureBuilder<void>(
+        future: initcamera(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            // If the Future is complete, display the preview.
+            return MaterialApp(
+              home: TakePictureScreen(
+                // Pass the appropriate camera to the TakePictureScreen widget.
+                camera: _firstCamera,
+              ),
+            );
+          } else {
+            // Otherwise, display a loading indicator.
+            return const Center(child: CircularProgressIndicator());
+          }
+        },
       ),
     );
   }
