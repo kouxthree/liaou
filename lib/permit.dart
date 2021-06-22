@@ -16,14 +16,17 @@ class Permit {
   Future<bool> requestPermission() async {
     await Permission.bluetooth.request();
     await Permission.location.request();
+    await Permission.camera.request();
     if (await Permission.bluetooth.isPermanentlyDenied ||
-        await Permission.location.isPermanentlyDenied) {
+        await Permission.location.isPermanentlyDenied ||
+        await Permission.camera.isPermanentlyDenied) {
       openAppSettings();
     }
     if (await _checkDeviceBluetoothIsOn() &&
         await _checkDeviceLocationIsOn() &&
         await Permission.bluetooth.status.isGranted &&
-        await Permission.location.isGranted)
+        await Permission.location.isGranted &&
+        await Permission.camera.isGranted)
       return true;
     else
       return false;

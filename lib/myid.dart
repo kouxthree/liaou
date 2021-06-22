@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:emojis/emojis.dart';
 import 'package:liaou/parts/signaltypeparts.dart';
+import 'package:liaou/parts/takepicture.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:liaou/consts.dart';
 import 'package:liaou/parts/ssignal.dart';
@@ -38,16 +39,43 @@ class _MyId extends State<MyId> {
   //build myid page
   Widget _buildMyId() {
     var _icon_id = Container(
-      height: 80,
-      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: Image.asset(
-          'img/pavlova.jpg',
-          fit: BoxFit.cover,
+        child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              height: 80,
+              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Image.asset(
+                  'img/pavlova.jpg',
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ],
         ),
-      ),
-    );
+        Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => TakePicture()),
+                );
+              },
+              child: Container(
+                child: Icon(Icons.camera_alt, size: 30),
+              ),
+            ),
+          ],
+        ),
+      ],
+    ));
     var _icon_gender = Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
