@@ -63,9 +63,8 @@ class _MyId extends State<MyId> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
+              onTap: () async {
+                String imgPath = await Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => TakePicture()),
                 );
               },
@@ -121,7 +120,7 @@ class _MyId extends State<MyId> {
         constraints:
             BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             _icon_id,
             _icon_gender,
