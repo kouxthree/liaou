@@ -47,7 +47,7 @@ class _SignalTypeParts extends State<SignalTypeParts> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           AnimatedSwitcher(
-            duration: const Duration(milliseconds: 250),
+            duration: const Duration(milliseconds: 500),
             transitionBuilder: (Widget child, Animation<double> animation) {
               return ScaleTransition(child: child, scale: animation);
               // final offsetAnimation = TweenSequence([

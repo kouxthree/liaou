@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:emojis/emojis.dart';
+import 'package:flutter/rendering.dart';
 import 'package:liaou/parts/signaltypeparts.dart';
 import 'package:liaou/parts/takepicture.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -32,7 +33,7 @@ class _MyId extends State<MyId> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(child: _buildMyId()),
+      body: _buildMyId(),
     );
   }
 
@@ -84,7 +85,7 @@ class _MyId extends State<MyId> {
             InkWell(
               onTap: () => genderTapped(Gender.Male),
               child: Container(
-                child: Text(Emojis.man, style: TextStyle(fontSize: 80)),
+                child: Text(Emojis.man, style: TextStyle(fontSize: 60)),
                 decoration: _maleDecoration,
               ),
             ),
@@ -96,7 +97,7 @@ class _MyId extends State<MyId> {
                 onTap: () =>
                     genderTapped(Gender.Female), // handle your onTap here
                 child: Container(
-                  child: Text(Emojis.woman, style: TextStyle(fontSize: 80)),
+                  child: Text(Emojis.woman, style: TextStyle(fontSize: 60)),
                   decoration: _femaleDecoration,
                 ),
               ),
@@ -116,7 +117,9 @@ class _MyId extends State<MyId> {
     //   ],
     // );
     return SingleChildScrollView(
-      child: Container(
+      child: ConstrainedBox(
+        constraints:
+            BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
