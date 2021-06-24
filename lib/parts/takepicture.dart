@@ -169,7 +169,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
       return;
     }
     if (state == AppLifecycleState.inactive) {
-      _controller?.dispose();
+      // _controller?.dispose();
     } else if (state == AppLifecycleState.resumed) {
       if (_controller != null) {
         onNewCameraSelected();

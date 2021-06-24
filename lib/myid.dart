@@ -20,7 +20,7 @@ class _MyId extends State<MyId> {
   BoxDecoration _maleDecoration = BoxDecoration();
   BoxDecoration _femaleDecoration = BoxDecoration();
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  late File _myimg;
+  Image _myimg  = Image.asset('img/pavlova.jpg', fit: BoxFit.cover,);
 
   @override
   void initState() {
@@ -54,10 +54,7 @@ class _MyId extends State<MyId> {
               padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
-                child: Image.asset(
-                  'img/pavlova.jpg',
-                  fit: BoxFit.cover,
-                ),
+                child: _myimg,
               ),
             ),
           ],
@@ -173,7 +170,7 @@ class _MyId extends State<MyId> {
     if (pickedFile != null) {
       imageFile = File(pickedFile.path);
       setState(() {
-        _myimg = imageFile;
+        _myimg  = Image.file(imageFile, fit: BoxFit.cover,);
       });
     }
   }
