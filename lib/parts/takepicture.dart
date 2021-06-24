@@ -4,19 +4,26 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
-class TakePicture extends StatelessWidget {
+class TakePicture extends StatefulWidget {
+  TakePicture({Key? key}) : super(key: key);
+  @override
+  TakePictureState createState() => TakePictureState();
+}
+class TakePictureState extends State<TakePicture> {
   var _firstCamera;
-
   Future<void> initcamera() async {
     // Ensure that plugin services are initialized so that `availableCameras()`
     // can be called before `runApp()`
     WidgetsFlutterBinding.ensureInitialized();
-
     // Obtain a list of the available cameras on the device.
     final cameras = await availableCameras();
-
     // Get a specific camera from the list of available cameras.
     _firstCamera = cameras.first;
+  }
+  @override
+  void initState() {
+    super.initState();
+    // initcamera();
   }
 
   @override
@@ -28,6 +35,8 @@ class TakePicture extends StatelessWidget {
     //   ),
     // );
     return Scaffold(
+      appBar: AppBar(
+          iconTheme: IconThemeData(color: Colors.black), centerTitle: true),
       body: FutureBuilder<void>(
         future: initcamera(),
         builder: (context, snapshot) {
@@ -70,16 +79,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   @override
   void initState() {
     super.initState();
-    // To display the current output from the Camera,
-    // create a CameraController.
-    _controller = CameraController(
-      // Get a specific camera from the list of available cameras.
-      widget.camera,
-      // Define the resolution to use.
-      ResolutionPreset.medium,
-    );
-    // Next, initialize the controller. This returns a Future.
-    _initializeControllerFuture = _controller.initialize();
+    onNewCameraSelected();
   }
 
   @override
@@ -91,22 +91,27 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final deviceRatio = size.width / size.height;
     return Scaffold(
-      appBar: AppBar(iconTheme: IconThemeData(color: Colors.black), centerTitle: true),
       // You must wait until the controller is initialized before displaying the
       // camera preview. Use a FutureBuilder to display a loading spinner until the
       // controller has finished initializing.
-      body: FutureBuilder<void>(
-        future: _initializeControllerFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            // If the Future is complete, display the preview.
-            return CameraPreview(_controller);
-          } else {
-            // Otherwise, display a loading indicator.
-            return const Center(child: CircularProgressIndicator());
-          }
-        },
+      body: Stack(
+        children: <Widget>[
+          FutureBuilder<void>(
+            future: _initializeControllerFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                // If the Future is complete, display the preview.
+                return CameraPreview(_controller);
+              } else {
+                // Otherwise, display a loading indicator.
+                return const Center(child: CircularProgressIndicator());
+              }
+            },
+          ),
+        ],
       ),
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -142,7 +147,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                 );
                 if (pictaken) {
                   dispose();
-                  //Navigator.of(context).pop(_imgPath);
+                  Navigator.of(context).pop(_imgPath);
                 }
               } catch (e) {
                 // If an error occurs, log the error to the console.
@@ -156,6 +161,51 @@ class TakePictureScreenState extends State<TakePictureScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );
   }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // App state changed before we got the chance to initialize.
+    if (_controller == null || !_controller.value.isInitialized) {
+      return;
+    }
+    if (state == AppLifecycleState.inactive) {
+      _controller?.dispose();
+    } else if (state == AppLifecycleState.resumed) {
+      if (_controller != null) {
+        onNewCameraSelected();
+      }
+    }
+  }
+
+  void onNewCameraSelected() {
+    // if (_controller != null) {
+    //   _controller!.dispose();
+    // }
+    // To display the current output from the Camera,
+    // create a CameraController.
+    _controller = CameraController(
+      // Get a specific camera from the list of available cameras.
+      widget.camera,
+      // Define the resolution to use.
+      ResolutionPreset.medium,
+    );
+    // Next, initialize the controller. This returns a Future.
+    _initializeControllerFuture = _controller.initialize();
+    // If the controller is updated then update the UI.
+    _controller.addListener(() {
+      if (mounted) setState(() {});
+      if (_controller.value.hasError) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Camera error ${_controller.value.errorDescription}'),
+          duration: const Duration(seconds: 1),
+          action: SnackBarAction(
+            label: 'ACTION',
+            onPressed: () {},
+          ),
+        ));
+      }
+    });
+  }
 }
 
 // A widget that displays the picture taken by the user.
@@ -168,10 +218,15 @@ class DisplayPictureScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(iconTheme: IconThemeData(color: Colors.black), centerTitle: true),
+      // appBar: AppBar(
+      //     iconTheme: IconThemeData(color: Colors.black), centerTitle: true),
       // The image is stored as a file on the device. Use the `Image.file`
       // constructor with the given path to display the image.
-      body: Image.file(File(imagePath)),
+      body: Column(
+        children: <Widget>[
+          Center(child: Image.file(File(imagePath))),
+        ],
+      ),
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         mainAxisSize: MainAxisSize.max,

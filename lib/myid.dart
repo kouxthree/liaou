@@ -1,6 +1,8 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:emojis/emojis.dart';
 import 'package:flutter/rendering.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:liaou/parts/signaltypeparts.dart';
 import 'package:liaou/parts/takepicture.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,6 +20,7 @@ class _MyId extends State<MyId> {
   BoxDecoration _maleDecoration = BoxDecoration();
   BoxDecoration _femaleDecoration = BoxDecoration();
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  late File _myimg;
 
   @override
   void initState() {
@@ -63,11 +66,12 @@ class _MyId extends State<MyId> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             InkWell(
-              onTap: () async {
-                String imgPath = await Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => TakePicture()),
-                );
-              },
+              // onTap: () async {
+              //   String imgPath = await Navigator.of(context).push(
+              //     MaterialPageRoute(builder: (context) => TakePicture()),
+              //   );
+              // },
+              onTap: () => _getFromCamera(),
               child: Container(
                 child: Icon(Icons.camera_alt, size: 30),
               ),
@@ -160,4 +164,18 @@ class _MyId extends State<MyId> {
     final SharedPreferences prefs = await _prefs;
     return prefs.getInt(PrefKey.Gender.toString()) ?? -1;
   }
+
+  // Get image from camera
+  Future _getFromCamera() async {
+    File imageFile;
+    final pickedFile = await ImagePicker().getImage(
+      source: ImageSource.camera,);
+    if (pickedFile != null) {
+      imageFile = File(pickedFile.path);
+      setState(() {
+        _myimg = imageFile;
+      });
+    }
+  }
+
 }
