@@ -7,11 +7,11 @@ class Consts {
   static const RESCAN = "Scan";
   static const DEVICE_LIST_ITEM_HEIGHT = 50.0;//bluetooth listview item height
   static const DEVICE_UNKNOWN = "Device Unknown";
-  // static const CONNECT = "Connect";
+  static const CONNECT = "Connect";
   static const GET_RSSI_SAMPLES = "Get Rssi Samples";
   static const EDGE_INSERT_NUM = 8.0;
   static const SCAN_TIMEOUT = 4;//scan time(seconds)
-  static const PERMISSION_MSG = "Bluetooth And Location Is Necessary.";
+  static const PERMISSION_MSG = "请你打开蓝牙和定位";//"Bluetooth And Location Is Necessary.";
 }
 
 //stored shared-preference key

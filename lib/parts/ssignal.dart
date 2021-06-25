@@ -30,55 +30,62 @@ class _SSignal extends State<SSignal> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Column(
-            children: [
-              InkWell(
-                onTap: () => sendSignalTapped(SendSignal.Orange),
-                child: Container(
-                  child: Icon(Icons.circle, size: 60, color: Colors.orange),
-                  decoration: _lstSendSignalDecoration[SendSignal.Orange.index],
+    return SingleChildScrollView(
+      child: ConstrainedBox(
+        constraints:
+            BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Column(
+              children: [
+                InkWell(
+                  onTap: () => sendSignalTapped(SendSignal.Orange),
+                  child: Container(
+                    child: Icon(Icons.circle, size: 60, color: Colors.orange),
+                    decoration:
+                        _lstSendSignalDecoration[SendSignal.Orange.index],
+                  ),
                 ),
-              ),
-            ],
-          ),
-          Column(
-            children: [
-              InkWell(
-                onTap: () => sendSignalTapped(SendSignal.Blue),
-                child: Container(
-                  child: Icon(Icons.circle, size: 60, color: Colors.blue),
-                  decoration: _lstSendSignalDecoration[SendSignal.Blue.index],
+              ],
+            ),
+            Column(
+              children: [
+                InkWell(
+                  onTap: () => sendSignalTapped(SendSignal.Blue),
+                  child: Container(
+                    child: Icon(Icons.circle, size: 60, color: Colors.blue),
+                    decoration: _lstSendSignalDecoration[SendSignal.Blue.index],
+                  ),
                 ),
-              ),
-            ],
-          ),
-          Column(
-            children: [
-              InkWell(
-                onTap: () => sendSignalTapped(SendSignal.Purple),
-                child: Container(
-                  child: Icon(Icons.circle, size: 60, color: Colors.purple),
-                  decoration: _lstSendSignalDecoration[SendSignal.Purple.index],
+              ],
+            ),
+            Column(
+              children: [
+                InkWell(
+                  onTap: () => sendSignalTapped(SendSignal.Purple),
+                  child: Container(
+                    child: Icon(Icons.circle, size: 60, color: Colors.purple),
+                    decoration:
+                        _lstSendSignalDecoration[SendSignal.Purple.index],
+                  ),
                 ),
-              ),
-            ],
-          ),
-          Column(
-            children: [
-              InkWell(
-                onTap: () => sendSignalTapped(SendSignal.Green),
-                child: Container(
-                  child: Icon(Icons.circle, size: 60, color: Colors.green),
-                  decoration: _lstSendSignalDecoration[SendSignal.Green.index],
+              ],
+            ),
+            Column(
+              children: [
+                InkWell(
+                  onTap: () => sendSignalTapped(SendSignal.Green),
+                  child: Container(
+                    child: Icon(Icons.circle, size: 60, color: Colors.green),
+                    decoration:
+                        _lstSendSignalDecoration[SendSignal.Green.index],
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
