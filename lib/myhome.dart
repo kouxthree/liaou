@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:emojis/emojis.dart';
 import 'package:liaou/parts/ssignal.dart';
@@ -70,7 +68,7 @@ class _MyHome extends State<MyHome> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Client(),//My Client/Remote Status
+            //Client(),//My Client/Remote Status
             CustomPaint(
               painter: LocPaint(_lstRemoteLocs), //paint remote location
             ),

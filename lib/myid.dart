@@ -48,39 +48,39 @@ class _MyId extends State<MyId> {
   Widget _buildMyId() {
     var _icon_id = Container(
         child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Container(
-              height: 80,
-              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: _myimg,
-              ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  height: 80,
+                  padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: _myimg,
+                  ),
+                ),
+              ],
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                InkWell(
+                  // onTap: () async {
+                  //   String imgPath = await Navigator.of(context).push(
+                  //     MaterialPageRoute(builder: (context) => TakePicture()),
+                  //   );
+                  // },
+                  onTap: () => _getFromCamera(),
+                  child: Container(
+                    child: Icon(Icons.camera_alt, size: 30),
+                  ),
+                ),
+              ],
             ),
           ],
-        ),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            InkWell(
-              // onTap: () async {
-              //   String imgPath = await Navigator.of(context).push(
-              //     MaterialPageRoute(builder: (context) => TakePicture()),
-              //   );
-              // },
-              onTap: () => _getFromCamera(),
-              child: Container(
-                child: Icon(Icons.camera_alt, size: 30),
-              ),
-            ),
-          ],
-        ),
-      ],
-    ));
+        ));
     var _icon_gender = Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -121,7 +121,7 @@ class _MyId extends State<MyId> {
     //   ],
     // );
     return Container(
-        child:SingleChildScrollView(
+      child: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -176,14 +176,19 @@ class _MyId extends State<MyId> {
       imageQuality: Consts.MY_IMG_QUALITY,
     );
     if (pickedFile != null) {
-      final _docDir = (await path_provider.getApplicationDocumentsDirectory()).absolute.path;
+      final _docDir = (await path_provider.getApplicationDocumentsDirectory())
+          .absolute.path;
       final _dstFileName = '$_docDir/${Consts.MY_IMG_FILE}';
       imageFile = File(pickedFile.path);
-      File _dstFile = await imageFile.copy(_dstFileName);
+      // imageCache!.clear();
+      File _dstFile =  await imageFile.copy(_dstFileName);
+      var _dstmem = await _dstFile.readAsBytes();
+      await imageFile.delete();
       setState(() {
-        _myimg = Image.file(
+        _myimg = Image.memory(//Image.file(
           //imageFile,
-          _dstFile,
+          //_dstFile,
+          _dstmem,
           fit: BoxFit.cover,
         );
       });

@@ -4,7 +4,7 @@ import 'package:beacon_broadcast/beacon_broadcast.dart';
 import '../consts.dart';
 
 class Info {
-  String uuid = '39ED98FF-liaou-441A-802F-9C398FC199D2';
+  String uuid = '39ED98FF-2900-441A-802F-9C398FC199D2';
   int majorId = 1;
   int minorId = 100;
   int transmissionPower = -59;
@@ -27,15 +27,5 @@ class Info {
       layout = 'm:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24';
       manufacturerId = 0x004c;
     }
-    //bluetooth
-    beaconBroadcast
-        .checkTransmissionSupported()
-        .then((isTransmissionSupported) {
-      isTransmissionSupported = isTransmissionSupported;
-    });
-    isAdvertisingSubscription =
-        beaconBroadcast.getAdvertisingStateChange().listen((isAdvertising) {
-          isAdvertising = isAdvertising;
-        });
   }
 }

@@ -7,11 +7,12 @@ class Serv extends StatefulWidget {
 }
 
 class _ServState extends State<Serv> {
-  Info _blinfo = new Info();
+  late Info _blinfo = new Info();
 
   @override
   void initState() {
     super.initState();
+    _getBeaconStatus();
   }
 
   @override
@@ -25,11 +26,12 @@ class _ServState extends State<Serv> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text('Transmission supported: ${_blinfo.isTransmissionSupported}'),
+              Text(
+                  'Transmission supported: ${_blinfo.isTransmissionSupported}'),
               Text('Beacon started: ${_blinfo.isAdvertising}'),
               Center(
                 child: TextButton(
-                  onPressed: _startBeacon,
+                  onPressed: () => _startBeacon(),
                   child: Text('START'),
                 ),
               ),
@@ -47,24 +49,37 @@ class _ServState extends State<Serv> {
   }
 
   void _startBeacon() {
-    setState(() {
-      _blinfo.beaconBroadcast
-          .setUUID(_blinfo.uuid)
-          .setMajorId(_blinfo.majorId)
-          .setMinorId(_blinfo.minorId)
-          .setTransmissionPower(_blinfo.transmissionPower)
-          .setAdvertiseMode(_blinfo.advertiseMode)
-          .setIdentifier(_blinfo.identifier)
-          .setLayout(_blinfo.layout)
-          .setManufacturerId(_blinfo.manufacturerId)
-          .setExtraData(_blinfo.extraData)
-          .start();
-    });
+    _blinfo.beaconBroadcast
+        .setUUID(_blinfo.uuid)
+        .setMajorId(_blinfo.majorId)
+        .setMinorId(_blinfo.minorId)
+        .setTransmissionPower(_blinfo.transmissionPower)
+        .setAdvertiseMode(_blinfo.advertiseMode)
+        .setIdentifier(_blinfo.identifier)
+        .setLayout(_blinfo.layout)
+        .setManufacturerId(_blinfo.manufacturerId)
+        .setExtraData(_blinfo.extraData)
+        .start();
   }
 
   void _stopBeacon() {
-    setState(() {
-      _blinfo.beaconBroadcast.stop();
+    _blinfo.beaconBroadcast.stop();
+  }
+
+  void _getBeaconStatus() {
+    _blinfo.beaconBroadcast
+        .checkTransmissionSupported()
+        .then((isTransmissionSupported) {
+      setState(() {
+        _blinfo.isTransmissionSupported = isTransmissionSupported;
+      });
+    });
+    _blinfo.isAdvertisingSubscription = _blinfo.beaconBroadcast
+        .getAdvertisingStateChange()
+        .listen((isAdvertising) {
+      setState(() {
+        _blinfo.isAdvertising = isAdvertising;
+      });
     });
   }
 
