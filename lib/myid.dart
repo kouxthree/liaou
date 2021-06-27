@@ -4,7 +4,8 @@ import 'package:emojis/emojis.dart';
 import 'package:flutter/rendering.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:liaou/parts/signaltypeparts.dart';
-import 'package:liaou/parts/takepicture.dart';
+// import 'package:liaou/parts/takepicture.dart';
+import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:liaou/consts.dart';
 import 'package:liaou/parts/ssignal.dart';
@@ -20,7 +21,10 @@ class _MyId extends State<MyId> {
   BoxDecoration _maleDecoration = BoxDecoration();
   BoxDecoration _femaleDecoration = BoxDecoration();
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  Image _myimg  = Image.asset('img/pavlova.jpg', fit: BoxFit.cover,);
+  Image _myimg = Image.asset(
+    'img/pavlova.jpg',
+    fit: BoxFit.cover,
+  );
 
   @override
   void initState() {
@@ -116,14 +120,14 @@ class _MyId extends State<MyId> {
     //     _icon_send_ignal,
     //   ],
     // );
-    return SingleChildScrollView(
-      child: ConstrainedBox(
-        constraints:
-            BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
+    return Container(
+        child:SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Container(height: 16.0),
             _icon_id,
+            Container(height: 16.0),
             _icon_gender,
             _icon_signaltype,
             _icon_send_ignal,
@@ -166,13 +170,23 @@ class _MyId extends State<MyId> {
   Future _getFromCamera() async {
     File imageFile;
     final pickedFile = await ImagePicker().getImage(
-      source: ImageSource.camera,);
+      source: ImageSource.camera,
+      maxHeight: Consts.MY_IMG_HEIGHT,
+      maxWidth: Consts.MY_IMG_WIDTH,
+      imageQuality: Consts.MY_IMG_QUALITY,
+    );
     if (pickedFile != null) {
+      final _docDir = (await path_provider.getApplicationDocumentsDirectory()).absolute.path;
+      final _dstFileName = '$_docDir/${Consts.MY_IMG_FILE}';
       imageFile = File(pickedFile.path);
+      File _dstFile = await imageFile.copy(_dstFileName);
       setState(() {
-        _myimg  = Image.file(imageFile, fit: BoxFit.cover,);
+        _myimg = Image.file(
+          //imageFile,
+          _dstFile,
+          fit: BoxFit.cover,
+        );
       });
     }
   }
-
 }

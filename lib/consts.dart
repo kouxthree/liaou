@@ -1,4 +1,5 @@
 class Consts {
+  static const COM = "com.liao";
   static const APP_NAME = "Liao U";
   static const HOME_PAGE = "Home";
   static const SETTING_PAGE = "Setting";
@@ -12,6 +13,10 @@ class Consts {
   static const EDGE_INSERT_NUM = 8.0;
   static const SCAN_TIMEOUT = 4;//scan time(seconds)
   static const PERMISSION_MSG = "请你打开蓝牙和定位";//"Bluetooth And Location Is Necessary.";
+  static const MY_IMG_FILE = "MY.jpg";
+  static const MY_IMG_QUALITY = 25;//5%
+  static const MY_IMG_WIDTH = 320.0;
+  static const MY_IMG_HEIGHT = 240.0;
 }
 
 //stored shared-preference key

@@ -30,10 +30,8 @@ class _SSignal extends State<SSignal> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: ConstrainedBox(
-        constraints:
-            BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
+    return Container(
+      child: SingleChildScrollView(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [

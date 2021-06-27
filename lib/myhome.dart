@@ -1,6 +1,10 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:emojis/emojis.dart';
 import 'package:liaou/parts/ssignal.dart';
+import 'bl/serv.dart';
+import 'bl/client.dart';
 import 'remoteloc.dart';
 import 'sizeutil.dart';
 import 'consts.dart';
@@ -66,9 +70,11 @@ class _MyHome extends State<MyHome> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            Client(),//My Client/Remote Status
             CustomPaint(
               painter: LocPaint(_lstRemoteLocs), //paint remote location
             ),
+            Serv(),//My Status Service/My Status
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
