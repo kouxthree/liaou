@@ -68,7 +68,7 @@ class _MyHome extends State<MyHome> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            //Client(),//My Client/Remote Status
+            Client(),//My Client/Remote Status
             CustomPaint(
               painter: LocPaint(_lstRemoteLocs), //paint remote location
             ),
