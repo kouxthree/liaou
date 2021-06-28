@@ -7,12 +7,22 @@ class Client extends StatefulWidget {
   final List<BluetoothDevice> lstDev = <BluetoothDevice>[];
   final Map<Guid, List<int>> readValues = new Map<Guid, List<int>>();
 
-   @override
+  @override
   _ClientState createState() => _ClientState();
 
-   startScan() {
-     fb.startScan();
-   }
+  startScan() async {
+    if (fb.state == BluetoothState.unavailable) {
+      return;
+    }
+    if (!(await fb.isOn)) {
+      await Future.delayed(Duration(seconds: 3));
+    }
+    if (!(await fb.isOn)) {
+      return;
+    }
+    lstDev.clear();
+    fb.startScan();
+  }
 }
 
 class _ClientState extends State<Client> {
@@ -37,8 +47,8 @@ class _ClientState extends State<Client> {
         _addDeviceTolist(result.device);
       }
     });
-    widget.startScan();
   }
+
   //add devices to list
   _addDeviceTolist(final BluetoothDevice device) {
     if (!widget.lstDev.contains(device)) {
@@ -50,20 +60,18 @@ class _ClientState extends State<Client> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _buildView(),
-    );
+    return Container(height: MediaQuery.of(context).size.height * 1/3,child:_buildView(),);
   }
 
   //build main view
-  ListView _buildView() {
+  _buildView() {
     if (_connectedDevice != null) {
       return _buildConnectDeviceView();
     }
     return _buildListViewOfDevices();
   }
   //build device list view
-  ListView _buildListViewOfDevices() {
+  _buildListViewOfDevices() {
     List<Container> containers = <Container>[];
     for (BluetoothDevice device in widget.lstDev) {
       containers.add(
@@ -80,22 +88,24 @@ class _ClientState extends State<Client> {
               ),
               TextButton(
                 child: Text('Connect',),
-                onPressed: _connectButtonTapped(device),
+                onPressed: () { _connectButtonTapped(device); },
               ),
             ],
           ),
         ),
       );
     }
-    return ListView(
+    return Scrollbar(child:ListView(
+      shrinkWrap: true,
+      // physics: NeverScrollableScrollPhysics(),
       padding: const EdgeInsets.all(8),
       children: <Widget>[
         ...containers,
       ],
-    );;
+    ),);
   }
   //build connected device list view
-  ListView _buildConnectDeviceView() {
+  _buildConnectDeviceView() {
     List<Container> containers = <Container>[];
 
     for (BluetoothService service in _services) {
@@ -139,12 +149,14 @@ class _ClientState extends State<Client> {
       );
     }
 
-    return ListView(
+    return Scrollbar(child:ListView(
+      shrinkWrap: true,
+      // physics: NeverScrollableScrollPhysics(),
       padding: const EdgeInsets.all(8),
       children: <Widget>[
         ...containers,
       ],
-    );
+    ),);
   }
   List<ButtonTheme> _buildReadWriteNotifyButton(BluetoothCharacteristic characteristic) {
     List<ButtonTheme> buttons = <ButtonTheme>[];
@@ -180,7 +192,7 @@ class _ClientState extends State<Client> {
             padding: const EdgeInsets.symmetric(horizontal: 4),
             child: TextButton(
               child: Text('WRITE',),
-              onPressed: _writeButtonTapped(characteristic),
+              onPressed: () { _writeButtonTapped(characteristic); },
             ),
           ),
         ),

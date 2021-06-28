@@ -20,6 +20,12 @@ class _MyHome extends State<MyHome> {
   List<RemoteLoc> _lstRemoteLocs = []; //remote locations
   // // final _locNums = 3; //locations
   // // final _locRadius = 5.0; //location circle radius
+  late Client _client;
+
+  _MyHome() {
+    _client = new Client();
+    _searchIcon = getSearchIcon(true);
+  }
 
   @override
   void initState() {
@@ -36,7 +42,6 @@ class _MyHome extends State<MyHome> {
     //     item.color = Colors.blue;
     //   _lstRemoteLocs.add(item);
     // }
-    _searchIcon = getSearchIcon(true);
   }
 
   @override
@@ -68,7 +73,7 @@ class _MyHome extends State<MyHome> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Client(),//My Client/Remote Status
+            _client,//My Client/Remote Status
             CustomPaint(
               painter: LocPaint(_lstRemoteLocs), //paint remote location
             ),
@@ -114,7 +119,8 @@ class _MyHome extends State<MyHome> {
   }
 
   //search icon tapped
-  void _onSearchIconTapped() {
+  void _onSearchIconTapped() async {
+    _client.fb.stopScan();
     setState(() {
       if (searchingFlag) {
         _searchIcon = getSearchIcon(false);
@@ -124,6 +130,7 @@ class _MyHome extends State<MyHome> {
         searchingFlag = true; //turn on searching
       }
     });
+    if(searchingFlag) _client.startScan();
   }
 
   //send icon tapped
