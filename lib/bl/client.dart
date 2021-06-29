@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
+import '../consts.dart';
 
 class Client extends StatefulWidget {
   final FlutterBlue fb = FlutterBlue.instance;
@@ -52,15 +53,18 @@ class _ClientState extends State<Client> {
   //add devices to list
   _addDeviceTolist(final BluetoothDevice device) {
     if (!widget.lstDev.contains(device)) {
-      setState(() {
-        widget.lstDev.add(device);
-      });
+      //add known identifier device
+      // if(Consts.COM.compareTo(device.id.toString()) == 0) {
+        setState(() {
+          widget.lstDev.add(device);
+        });
+      // }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(height: MediaQuery.of(context).size.height * 1/3,child:_buildView(),);
+    return _buildView();
   }
 
   //build main view

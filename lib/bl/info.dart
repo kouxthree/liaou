@@ -4,7 +4,7 @@ import 'package:beacon_broadcast/beacon_broadcast.dart';
 import '../consts.dart';
 
 class Info {
-  String uuid = '39ED98FF-2900-441A-802F-9C398FC199D2';
+  String uuid = '39ED98FF-FFFF-441A-802F-9C398FC199D2';
   int majorId = 1;
   int minorId = 100;
   int transmissionPower = -59;

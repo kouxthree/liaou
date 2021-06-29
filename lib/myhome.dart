@@ -50,6 +50,7 @@ class _MyHome extends State<MyHome> {
       body: Center(child: _buildMyHome()),
     );
   }
+
   //scan remote locations
   // void _reScan() {
   //   requestPermission();
@@ -63,7 +64,12 @@ class _MyHome extends State<MyHome> {
   //     });
   //   });
   // }
-
+  // FractionallySizedBox(
+  // widthFactor: 0.65, // between 0 and 1
+  // heightFactor: 1.0,
+  // child:Container(color: Colors.red
+  // ,),
+  // )
   //build myhome page
   Widget _buildMyHome() {
     return Scaffold(
@@ -73,22 +79,34 @@ class _MyHome extends State<MyHome> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _client,//My Client/Remote Status
-            CustomPaint(
-              painter: LocPaint(_lstRemoteLocs), //paint remote location
+            Expanded(
+              flex: 30,
+              child: _client,
+            ), //My Client/Remote Status
+            Expanded(
+              flex: 30,
+              child: CustomPaint(
+                painter: LocPaint(_lstRemoteLocs), //paint remote location
+              ),
             ),
-            Serv(),//My Status Service/My Status
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _searchIcon,
-                SSignal(),
-                FloatingActionButton(
-                  onPressed: _onSendIconTapped,
-                  child: Icon(Icons.present_to_all),
-                  backgroundColor: Colors.red,
-                ),
-              ],
+            Expanded(
+              flex: 30,
+              child: Serv(),
+            ), //My Status Service/My Status
+            Expanded(
+              flex: 10,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _searchIcon,
+                  SSignal(),
+                  FloatingActionButton(
+                    onPressed: _onSendIconTapped,
+                    child: Icon(Icons.present_to_all),
+                    backgroundColor: Colors.red,
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -130,7 +148,7 @@ class _MyHome extends State<MyHome> {
         searchingFlag = true; //turn on searching
       }
     });
-    if(searchingFlag) _client.startScan();
+    if (searchingFlag) _client.startScan();
   }
 
   //send icon tapped
