@@ -15,7 +15,7 @@ class MyHome extends StatefulWidget {
 }
 
 class _MyHome extends State<MyHome> {
-  var _searchIcon; //Icon _searchIcon = Icon(Icons.search); //show search or search-off icon
+  // var _searchIcon; //Icon _searchIcon = Icon(Icons.search); //show search or search-off icon
   bool searchingFlag = true; //is searching?
   List<RemoteLoc> _lstRemoteLocs = []; //remote locations
   // // final _locNums = 3; //locations
@@ -24,7 +24,7 @@ class _MyHome extends State<MyHome> {
 
   _MyHome() {
     _client = new Client();
-    _searchIcon = getSearchIcon(true);
+    // _searchIcon = getSearchIcon(false);
   }
 
   @override
@@ -90,24 +90,24 @@ class _MyHome extends State<MyHome> {
               ),
             ),
             Expanded(
-              flex: 30,
+              flex: 40,
               child: Serv(),
             ), //My Status Service/My Status
-            Expanded(
-              flex: 10,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _searchIcon,
-                  SSignal(),
-                  FloatingActionButton(
-                    onPressed: _onSendIconTapped,
-                    child: Icon(Icons.present_to_all),
-                    backgroundColor: Colors.red,
-                  ),
-                ],
-              ),
-            ),
+            // Expanded(
+            //   flex: 10,
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //     children: [
+                  // _searchIcon,
+                  //SSignal(),
+                  // FloatingActionButton(
+                  //   onPressed: _onSendIconTapped,
+                  //   child: Icon(Icons.present_to_all),
+                  //   backgroundColor: Colors.red,
+                  // ),
+              //   ],
+              // ),
+            // ),
           ],
         ),
       ),
@@ -117,39 +117,71 @@ class _MyHome extends State<MyHome> {
     );
   }
 
-  //get search icon
-  FloatingActionButton getSearchIcon(bool flag) {
-    var searchicon;
-    if (flag) {
-      searchicon = FloatingActionButton(
-        onPressed: _onSearchIconTapped,
-        child: Icon(Icons.search),
-        backgroundColor: Colors.blue,
-      );
-    } else {
-      searchicon = FloatingActionButton(
-        onPressed: _onSearchIconTapped,
-        child: Icon(Icons.search_off),
-        backgroundColor: Colors.grey,
-      );
-    }
-    return searchicon;
-  }
-
-  //search icon tapped
-  void _onSearchIconTapped() async {
-    _client.fb.stopScan();
-    setState(() {
-      if (searchingFlag) {
-        _searchIcon = getSearchIcon(false);
-        searchingFlag = false; //turn off searching
-      } else {
-        _searchIcon = getSearchIcon(true);
-        searchingFlag = true; //turn on searching
-      }
-    });
-    if (searchingFlag) _client.startScan();
-  }
+  // //get search icon
+  // FloatingActionButton getSearchIcon(bool flag) {
+  //   var searchicon;
+  //   if (flag) {
+  //     searchicon = FloatingActionButton(
+  //       onPressed: _onSearchIconTapped,
+  //       child: Icon(Icons.search),
+  //       backgroundColor: Colors.blue,
+  //     );
+  //   } else {
+  //     searchicon = FloatingActionButton(
+  //       onPressed: _onSearchIconTapped,
+  //       child: Icon(Icons.search_off),
+  //       backgroundColor: Colors.grey,
+  //     );
+  //   }
+  //   return searchicon;
+  // }
+  //
+  // //search icon tapped
+  // void _onSearchIconTapped() async {
+  //   _client.fb.stopScan();
+  //   setState(() {
+  //     if (searchingFlag) {
+  //       _searchIcon = getSearchIcon(false);
+  //       searchingFlag = false; //turn off searching
+  //     } else {
+  //       _searchIcon = getSearchIcon(true);
+  //       searchingFlag = true; //turn on searching
+  //     }
+  //   });
+  //   if (searchingFlag) _client.startScan();
+  // }  // //get search icon
+  // FloatingActionButton getSearchIcon(bool flag) {
+  //   var searchicon;
+  //   if (flag) {
+  //     searchicon = FloatingActionButton(
+  //       onPressed: _onSearchIconTapped,
+  //       child: Icon(Icons.search),
+  //       backgroundColor: Colors.blue,
+  //     );
+  //   } else {
+  //     searchicon = FloatingActionButton(
+  //       onPressed: _onSearchIconTapped,
+  //       child: Icon(Icons.search_off),
+  //       backgroundColor: Colors.grey,
+  //     );
+  //   }
+  //   return searchicon;
+  // }
+  //
+  // //search icon tapped
+  // void _onSearchIconTapped() async {
+  //   _client.fb.stopScan();
+  //   setState(() {
+  //     if (searchingFlag) {
+  //       _searchIcon = getSearchIcon(false);
+  //       searchingFlag = false; //turn off searching
+  //     } else {
+  //       _searchIcon = getSearchIcon(true);
+  //       searchingFlag = true; //turn on searching
+  //     }
+  //   });
+  //   if (searchingFlag) _client.startScan();
+  // }
 
   //send icon tapped
   void _onSendIconTapped() {

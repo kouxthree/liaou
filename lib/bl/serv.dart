@@ -7,18 +7,21 @@ class Serv extends StatefulWidget {
 }
 
 class _ServState extends State<Serv> {
-  late Info _blinfo = new Info();
+  late Info _blinfo = new Info(); //beacon info
+  late FloatingActionButton _beaconStatusBtn; //switch beacon status button
 
   @override
   void initState() {
     super.initState();
     _getBeaconStatus();
+    _beaconStatusBtn =
+        _getBeaconStatusBtn(_blinfo.isAdvertising ? true : false);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: SingleChildScrollView(
+    return Scaffold(
+      body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
@@ -29,25 +32,54 @@ class _ServState extends State<Serv> {
               Text(
                   'Transmission supported: ${_blinfo.isTransmissionSupported}'),
               Text('Beacon started: ${_blinfo.isAdvertising}'),
-              Center(
-                child: TextButton(
-                  onPressed: () => _startBeacon(),
-                  child: Text('START'),
-                ),
-              ),
-              Center(
-                child: TextButton(
-                  onPressed: _stopBeacon,
-                  child: Text('STOP'),
-                ),
-              ),
             ],
           ),
         ),
       ),
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation.miniStartDocked,
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _beaconStatusBtn,
+        ],
+      ),
     );
   }
 
+  //get switch beacon status button
+  FloatingActionButton _getBeaconStatusBtn(bool flag) {
+    var btn;
+    if (flag) {
+      btn = FloatingActionButton(
+        onPressed: () => _switchBeaconStatus(),
+        child: Icon(Icons.present_to_all),
+        backgroundColor: Colors.red,
+      );
+    } else {
+      btn = FloatingActionButton(
+        onPressed: () => _switchBeaconStatus(),
+        child: Icon(Icons.present_to_all),
+        backgroundColor: Colors.grey,
+      );
+    }
+    return btn;
+  }
+
+  //start or stop beacon. make visible or invisible to others
+  void _switchBeaconStatus() {
+    if (_blinfo.isAdvertising) {
+      //visible -> invisible
+      _stopBeacon();
+      _beaconStatusBtn = _getBeaconStatusBtn(false);
+    } else {
+      //invisible -> visible
+      _startBeacon();
+      _beaconStatusBtn = _getBeaconStatusBtn(true);
+    }
+  }
+
+  //start beacon. make me visible to others
   void _startBeacon() {
     _blinfo.beaconBroadcast
         .setUUID(_blinfo.uuid)
