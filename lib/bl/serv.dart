@@ -20,49 +20,52 @@ class _ServState extends State<Serv> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                  'Transmission supported: ${_blinfo.isTransmissionSupported}'),
-              Text('Beacon started: ${_blinfo.isAdvertising}'),
-            ],
+    return Scaffold(body: Row(
+      children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _beaconStatusBtn,
+          ],
+        ),
+        SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                    'Transmission supported: ${_blinfo
+                        .isTransmissionSupported}'),
+                Text('Beacon started: ${_blinfo.isAdvertising}'),
+              ],
+            ),
           ),
         ),
-      ),
-      floatingActionButtonLocation:
-          FloatingActionButtonLocation.miniStartDocked,
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _beaconStatusBtn,
-        ],
-      ),
-    );
+      ],
+    ),);
   }
 
   //get switch beacon status button
   FloatingActionButton _getBeaconStatusBtn(bool flag) {
     var btn;
-    if (flag) {
-      btn = FloatingActionButton(
-        onPressed: () => _switchBeaconStatus(),
-        child: Icon(Icons.present_to_all),
-        backgroundColor: Colors.blue,
-      );
-    } else {
-      btn = FloatingActionButton(
-        onPressed: () => _switchBeaconStatus(),
-        child: Icon(Icons.present_to_all),
-        backgroundColor: Colors.grey,
-      );
-    }
+    setState(() {
+      if (flag) {
+        btn = FloatingActionButton(
+          onPressed: () => _switchBeaconStatus(),
+          child: Icon(Icons.present_to_all),
+          backgroundColor: Colors.blue,
+        );
+      } else {
+        btn = FloatingActionButton(
+          onPressed: () => _switchBeaconStatus(),
+          child: Icon(Icons.present_to_all),
+          backgroundColor: Colors.grey,
+        );
+      }
+    });
     return btn;
   }
 
@@ -71,12 +74,13 @@ class _ServState extends State<Serv> {
     if (_blinfo.isAdvertising) {
       //visible -> invisible
       _stopBeacon();
-      _beaconStatusBtn = _getBeaconStatusBtn(false);
     } else {
       //invisible -> visible
       _startBeacon();
-      _beaconStatusBtn = _getBeaconStatusBtn(true);
     }
+    _getBeaconStatus();
+    _beaconStatusBtn =
+        _getBeaconStatusBtn(_blinfo.isAdvertising ? true : false);
   }
 
   //start beacon. make me visible to others

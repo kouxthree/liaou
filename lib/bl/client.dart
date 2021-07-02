@@ -106,39 +106,41 @@ class _ClientState extends State<Client> {
       );
     }
     return Scaffold(
-      body: Scrollbar(
-        child: ListView(
-          shrinkWrap: true,
-          // physics: NeverScrollableScrollPhysics(),
-          padding: const EdgeInsets.all(8),
-          children: <Widget>[
-            ...containers,
-          ],
-        ),
-      ),
-      floatingActionButtonLocation:
-          FloatingActionButtonLocation.miniStartDocked,
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Row(
         children: [
-          StreamBuilder<bool>(
-            stream: FlutterBlue.instance.isScanning,
-            initialData: false,
-            builder: (c, snapshot) {
-              if (snapshot.data!) {
-                return FloatingActionButton(
-                  child: Icon(Icons.search),
-                  backgroundColor: Colors.blue,
-                  onPressed: () => _onSearchIconTapped(false),
-                );
-              } else {
-                return FloatingActionButton(
-                  child: Icon(Icons.search),
-                  backgroundColor: Colors.grey,
-                  onPressed: () => _onSearchIconTapped(true),
-                );
-              }
-            },
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              StreamBuilder<bool>(
+                stream: FlutterBlue.instance.isScanning,
+                initialData: false,
+                builder: (c, snapshot) {
+                  if (snapshot.data!) {
+                    return FloatingActionButton(
+                      child: Icon(Icons.search),
+                      backgroundColor: Colors.blue,
+                      onPressed: () => _onSearchIconTapped(false),
+                    );
+                  } else {
+                    return FloatingActionButton(
+                      child: Icon(Icons.search),
+                      backgroundColor: Colors.grey,
+                      onPressed: () => _onSearchIconTapped(true),
+                    );
+                  }
+                },
+              ),
+            ],
+          ),
+          Scrollbar(
+            child: ListView(
+              shrinkWrap: true,
+              // physics: NeverScrollableScrollPhysics(),
+              padding: const EdgeInsets.all(8),
+              children: <Widget>[
+                ...containers,
+              ],
+            ),
           ),
         ],
       ),

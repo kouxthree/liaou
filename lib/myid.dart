@@ -22,7 +22,7 @@ class _MyId extends State<MyId> {
   BoxDecoration _femaleDecoration = BoxDecoration();
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   Image _myimg = Image.asset(
-    'img/pavlova.jpg',
+    'docs/img/pavlova.jpg',
     fit: BoxFit.cover,
   );
 
@@ -48,39 +48,39 @@ class _MyId extends State<MyId> {
   Widget _buildMyId() {
     var _icon_id = Container(
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  height: 80,
-                  padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: _myimg,
-                  ),
-                ),
-              ],
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                InkWell(
-                  // onTap: () async {
-                  //   String imgPath = await Navigator.of(context).push(
-                  //     MaterialPageRoute(builder: (context) => TakePicture()),
-                  //   );
-                  // },
-                  onTap: () => _getFromCamera(),
-                  child: Container(
-                    child: Icon(Icons.camera_alt, size: 30),
-                  ),
-                ),
-              ],
+            Container(
+              height: 80,
+              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: _myimg,
+              ),
             ),
           ],
-        ));
+        ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            InkWell(
+              // onTap: () async {
+              //   String imgPath = await Navigator.of(context).push(
+              //     MaterialPageRoute(builder: (context) => TakePicture()),
+              //   );
+              // },
+              onTap: () => _getFromCamera(),
+              child: Container(
+                child: Icon(Icons.camera_alt, size: 30),
+              ),
+            ),
+          ],
+        ),
+      ],
+    ));
     var _icon_gender = Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -89,7 +89,12 @@ class _MyId extends State<MyId> {
             InkWell(
               onTap: () => genderTapped(Gender.Male),
               child: Container(
-                child: Text(Emojis.man, style: TextStyle(fontSize: 60)),
+                // child: Text(Emojis.man, style: TextStyle(fontSize: 60)),
+                height: 60,
+                child: Image.asset(
+                  'docs/icon/男人.ico',
+                  fit: BoxFit.cover,
+                ),
                 decoration: _maleDecoration,
               ),
             ),
@@ -101,7 +106,12 @@ class _MyId extends State<MyId> {
                 onTap: () =>
                     genderTapped(Gender.Female), // handle your onTap here
                 child: Container(
-                  child: Text(Emojis.woman, style: TextStyle(fontSize: 60)),
+                  //child: Text(Emojis.woman, style: TextStyle(fontSize: 60)),
+                  height: 60,
+                  child: Image.asset(
+                    'docs/icon/女人.ico',
+                    fit: BoxFit.cover,
+                  ),
                   decoration: _femaleDecoration,
                 ),
               ),
@@ -177,15 +187,17 @@ class _MyId extends State<MyId> {
     );
     if (pickedFile != null) {
       final _docDir = (await path_provider.getApplicationDocumentsDirectory())
-          .absolute.path;
+          .absolute
+          .path;
       final _dstFileName = '$_docDir/${Consts.MY_IMG_FILE}';
       imageFile = File(pickedFile.path);
       // imageCache!.clear();
-      File _dstFile =  await imageFile.copy(_dstFileName);
+      File _dstFile = await imageFile.copy(_dstFileName);
       var _dstmem = await _dstFile.readAsBytes();
       await imageFile.delete();
       setState(() {
-        _myimg = Image.memory(//Image.file(
+        _myimg = Image.memory(
+          //Image.file(
           //imageFile,
           //_dstFile,
           _dstmem,
