@@ -11,7 +11,7 @@ class Client extends StatefulWidget {
   @override
   _ClientState createState() => _ClientState();
 
-  startScan() async {
+  _startScan() async {
     if (fb.state == BluetoothState.unavailable) {
       return;
     }
@@ -30,7 +30,7 @@ class _ClientState extends State<Client> {
   var _connectedDevice;
   var _services;
   final _writeController = TextEditingController();
-  var _searchIcon; //show search or search-off icon
+  // var _searchIcon; //show search or search-off icon
 
   @override
   void initState() {
@@ -108,38 +108,52 @@ class _ClientState extends State<Client> {
     return Scaffold(
       body: Row(
         children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              StreamBuilder<bool>(
-                stream: FlutterBlue.instance.isScanning,
-                initialData: false,
-                builder: (c, snapshot) {
-                  if (snapshot.data!) {
-                    return FloatingActionButton(
-                      child: Icon(Icons.search),
-                      backgroundColor: Colors.blue,
-                      onPressed: () => _onSearchIconTapped(false),
-                    );
-                  } else {
-                    return FloatingActionButton(
-                      child: Icon(Icons.search),
-                      backgroundColor: Colors.grey,
-                      onPressed: () => _onSearchIconTapped(true),
-                    );
-                  }
-                },
-              ),
-            ],
+          Expanded(
+            flex: 10,
+            child: FloatingActionButton(
+              child: Icon(Icons.search),
+              backgroundColor: Colors.blue,
+              onPressed: () => _onSearchIconTapped(),
+            ),
           ),
-          Scrollbar(
-            child: ListView(
-              shrinkWrap: true,
-              // physics: NeverScrollableScrollPhysics(),
-              padding: const EdgeInsets.all(8),
-              children: <Widget>[
-                ...containers,
-              ],
+          // Column(
+          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //   children: [
+          //     StreamBuilder<bool>(
+          //       stream: widget.fb.isScanning,
+          //       initialData: false,
+          //       builder: (c, snapshot) {
+          //         if (snapshot.data!) {
+          //           return FloatingActionButton(
+          //             child: Icon(Icons.stop),
+          //             backgroundColor: Colors.blue,
+          //             // onPressed: () => _onSearchIconTapped(false),
+          //             onPressed: () => widget.fb.stopScan(),
+          //           );
+          //         } else {
+          //           return FloatingActionButton(
+          //             child: Icon(Icons.search),
+          //             backgroundColor: Colors.grey,
+          //             // onPressed: () => _onSearchIconTapped(true),
+          //             onPressed: () =>
+          //                 widget.fb.startScan(timeout: Duration(seconds: 4)),
+          //           );
+          //         }
+          //       },
+          //     ),
+          //   ],
+          // ),
+          Expanded(
+            flex: 90,
+            child: Scrollbar(
+              child: ListView(
+                shrinkWrap: true,
+                // physics: NeverScrollableScrollPhysics(),
+                padding: const EdgeInsets.all(8),
+                children: <Widget>[
+                  ...containers,
+                ],
+              ),
             ),
           ),
         ],
@@ -205,13 +219,10 @@ class _ClientState extends State<Client> {
   }
 
   //search icon tapped
-  void _onSearchIconTapped(bool flg) async {
-    if (flg) {
-      widget.fb
-          .startScan(); //(timeout: Duration(seconds: 4));//turn on searching
-    } else {
-      widget.fb.stopScan(); //turn off searching
-    }
+  void _onSearchIconTapped() async {
+    widget.fb.stopScan();
+    widget.lstDev.clear();
+    widget._startScan(); //(timeout: Duration(seconds: 4));//turn on searching
   }
 
   List<ButtonTheme> _buildReadWriteNotifyButton(

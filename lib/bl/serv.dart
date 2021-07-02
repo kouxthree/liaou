@@ -20,32 +20,44 @@ class _ServState extends State<Serv> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Row(
-      children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            _beaconStatusBtn,
-          ],
-        ),
-        SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
+    return Scaffold(
+      body: Row(
+        children: [
+          Expanded(
+            flex: 10,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                    'Transmission supported: ${_blinfo
-                        .isTransmissionSupported}'),
-                Text('Beacon started: ${_blinfo.isAdvertising}'),
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _beaconStatusBtn,
               ],
             ),
           ),
-        ),
-      ],
-    ),);
+          Expanded(
+            flex: 90,
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      'Transmission supported: ${_blinfo.isTransmissionSupported}',
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Text(
+                      'Beacon started: ${_blinfo.isAdvertising}',
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   //get switch beacon status button
@@ -79,8 +91,6 @@ class _ServState extends State<Serv> {
       _startBeacon();
     }
     _getBeaconStatus();
-    _beaconStatusBtn =
-        _getBeaconStatusBtn(_blinfo.isAdvertising ? true : false);
   }
 
   //start beacon. make me visible to others
@@ -115,6 +125,8 @@ class _ServState extends State<Serv> {
         .listen((isAdvertising) {
       setState(() {
         _blinfo.isAdvertising = isAdvertising;
+        _beaconStatusBtn =
+            _getBeaconStatusBtn(_blinfo.isAdvertising ? true : false);
       });
     });
   }

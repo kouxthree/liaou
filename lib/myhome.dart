@@ -20,10 +20,10 @@ class _MyHome extends State<MyHome> {
   List<RemoteLoc> _lstRemoteLocs = []; //remote locations
   // // final _locNums = 3; //locations
   // // final _locRadius = 5.0; //location circle radius
-  late Client _client;
+  //late Client _client;
 
   _MyHome() {
-    _client = new Client();
+    //_client = new Client();
     // _searchIcon = getSearchIcon(false);
   }
 
@@ -81,7 +81,7 @@ class _MyHome extends State<MyHome> {
           children: [
             Expanded(
               flex: 30,
-              child: _client,
+              child: Client(),//_client,
             ), //My Client/Remote Status
             Expanded(
               flex: 30,
