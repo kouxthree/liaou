@@ -30,6 +30,7 @@ class _ClientState extends State<Client> {
   var _connectedDevice;
   var _services;
   final _writeController = TextEditingController();
+  var _searchIcon; //show search or search-off icon
 
   @override
   void initState() {
@@ -55,9 +56,9 @@ class _ClientState extends State<Client> {
     if (!widget.lstDev.contains(device)) {
       //add known identifier device
       // if(Consts.COM.compareTo(device.id.toString()) == 0) {
-        setState(() {
-          widget.lstDev.add(device);
-        });
+      setState(() {
+        widget.lstDev.add(device);
+      });
       // }
     }
   }
@@ -74,6 +75,7 @@ class _ClientState extends State<Client> {
     }
     return _buildListViewOfDevices();
   }
+
   //build device list view
   _buildListViewOfDevices() {
     List<Container> containers = <Container>[];
@@ -91,23 +93,58 @@ class _ClientState extends State<Client> {
                 ),
               ),
               TextButton(
-                child: Text('Connect',),
-                onPressed: () { _connectButtonTapped(device); },
+                child: Text(
+                  'Connect',
+                ),
+                onPressed: () {
+                  _connectButtonTapped(device);
+                },
               ),
             ],
           ),
         ),
       );
     }
-    return Scrollbar(child:ListView(
-      shrinkWrap: true,
-      // physics: NeverScrollableScrollPhysics(),
-      padding: const EdgeInsets.all(8),
-      children: <Widget>[
-        ...containers,
-      ],
-    ),);
+    return Scaffold(
+      body: Scrollbar(
+        child: ListView(
+          shrinkWrap: true,
+          // physics: NeverScrollableScrollPhysics(),
+          padding: const EdgeInsets.all(8),
+          children: <Widget>[
+            ...containers,
+          ],
+        ),
+      ),
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation.miniStartDocked,
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          StreamBuilder<bool>(
+            stream: FlutterBlue.instance.isScanning,
+            initialData: false,
+            builder: (c, snapshot) {
+              if (snapshot.data!) {
+                return FloatingActionButton(
+                  child: Icon(Icons.search),
+                  backgroundColor: Colors.blue,
+                  onPressed: () => _onSearchIconTapped(false),
+                );
+              } else {
+                return FloatingActionButton(
+                  child: Icon(Icons.search),
+                  backgroundColor: Colors.grey,
+                  onPressed: () => _onSearchIconTapped(true),
+                );
+              }
+            },
+          ),
+        ],
+      ),
+    );
   }
+
   //build connected device list view
   _buildConnectDeviceView() {
     List<Container> containers = <Container>[];
@@ -153,16 +190,30 @@ class _ClientState extends State<Client> {
       );
     }
 
-    return Scrollbar(child:ListView(
-      shrinkWrap: true,
-      // physics: NeverScrollableScrollPhysics(),
-      padding: const EdgeInsets.all(8),
-      children: <Widget>[
-        ...containers,
-      ],
-    ),);
+    return Scrollbar(
+      child: ListView(
+        shrinkWrap: true,
+        // physics: NeverScrollableScrollPhysics(),
+        padding: const EdgeInsets.all(8),
+        children: <Widget>[
+          ...containers,
+        ],
+      ),
+    );
   }
-  List<ButtonTheme> _buildReadWriteNotifyButton(BluetoothCharacteristic characteristic) {
+
+  //search icon tapped
+  void _onSearchIconTapped(bool flg) async {
+    if (flg) {
+      widget.fb
+          .startScan(); //(timeout: Duration(seconds: 4));//turn on searching
+    } else {
+      widget.fb.stopScan(); //turn off searching
+    }
+  }
+
+  List<ButtonTheme> _buildReadWriteNotifyButton(
+      BluetoothCharacteristic characteristic) {
     List<ButtonTheme> buttons = <ButtonTheme>[];
     if (characteristic.properties.read) {
       buttons.add(
@@ -172,7 +223,9 @@ class _ClientState extends State<Client> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4),
             child: TextButton(
-              child: Text('READ',),
+              child: Text(
+                'READ',
+              ),
               onPressed: () async {
                 var sub = characteristic.value.listen((value) {
                   setState(() {
@@ -195,8 +248,12 @@ class _ClientState extends State<Client> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4),
             child: TextButton(
-              child: Text('WRITE',),
-              onPressed: () { _writeButtonTapped(characteristic); },
+              child: Text(
+                'WRITE',
+              ),
+              onPressed: () {
+                _writeButtonTapped(characteristic);
+              },
             ),
           ),
         ),
@@ -224,15 +281,16 @@ class _ClientState extends State<Client> {
     }
     return buttons;
   }
+
   //connect button tapped
   _connectButtonTapped(BluetoothDevice device) async {
     widget.fb.stopScan();
-    try{
+    try {
       await device.connect();
-    // } catch (e) {
-    //   if (e.code != 'already_connected') {
-    //     throw e;
-    //   }
+      // } catch (e) {
+      //   if (e.code != 'already_connected') {
+      //     throw e;
+      //   }
     } finally {
       _services = await device.discoverServices();
     }
@@ -240,6 +298,7 @@ class _ClientState extends State<Client> {
       _connectedDevice = device;
     });
   }
+
   _writeButtonTapped(BluetoothCharacteristic characteristic) async {
     await showDialog(
         context: context,
@@ -259,8 +318,8 @@ class _ClientState extends State<Client> {
               TextButton(
                 child: Text("Send"),
                 onPressed: () {
-                  characteristic.write(
-                      utf8.encode(_writeController.value.text));
+                  characteristic
+                      .write(utf8.encode(_writeController.value.text));
                   Navigator.pop(context);
                 },
               ),

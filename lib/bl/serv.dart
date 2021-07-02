@@ -54,7 +54,7 @@ class _ServState extends State<Serv> {
       btn = FloatingActionButton(
         onPressed: () => _switchBeaconStatus(),
         child: Icon(Icons.present_to_all),
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.blue,
       );
     } else {
       btn = FloatingActionButton(
