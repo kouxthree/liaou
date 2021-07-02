@@ -12,10 +12,37 @@ class LiaoU extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: Consts.APP_NAME,
+      // theme: ThemeData(
+      //   primarySwatch: Colors.blue,
+      // ),
+      home: LiaoUHome(),
+
+      /* light theme settings */
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        primaryColor: Colors.white,
+        brightness: Brightness.light,
+        accentColor: Colors.black,
+        accentIconTheme: IconThemeData(color: Colors.white),
+        dividerColor: Colors.white54,
+        scaffoldBackgroundColor: Colors.white,
       ),
-      home: LiaoUHome(),
+
+      /* Dark theme settings */
+      darkTheme: ThemeData(
+        primarySwatch: Colors.blue,
+        primaryColor: Colors.black,
+        brightness: Brightness.dark,
+        accentColor: Colors.white,
+        accentIconTheme: IconThemeData(color: Colors.black),
+        dividerColor: Colors.black12,
+        scaffoldBackgroundColor: Color(0xFF131313),
+      ),
+
+      /* ThemeMode.system to follow system theme,
+         ThemeMode.light for light theme,
+         ThemeMode.dark for dark theme */
+      themeMode: ThemeMode.system,
     );
   }
 }
