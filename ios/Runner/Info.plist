@@ -25,6 +25,7 @@
 <key>NSMicrophoneUsageDescription</key>
 <string>Allow access to microphone</string>
 
+
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>

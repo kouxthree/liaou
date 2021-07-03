@@ -11,7 +11,7 @@ class Consts {
   static const CONNECT = "Connect";
   static const GET_RSSI_SAMPLES = "Get Rssi Samples";
   static const EDGE_INSERT_NUM = 8.0;
-  static const SCAN_TIMEOUT = 4;//scan time(seconds)
+  static const SCAN_TIMEOUT = 12;//scan time(seconds)
   static const PERMISSION_MSG = "请你打开蓝牙和定位";//"Bluetooth And Location Is Necessary.";
   static const MY_IMG_FILE = "MY.jpg";
   static const MY_IMG_QUALITY = 25;//5%

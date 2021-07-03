@@ -43,8 +43,8 @@ class _ServState extends State<Serv> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      'Transmission supported: ${_blinfo.isTransmissionSupported}',
-                      overflow: TextOverflow.ellipsis,
+                      'Transmission supported:${_blinfo.isTransmissionSupported}',
+                      overflow: TextOverflow.fade,
                     ),
                     Text(
                       'Beacon started: ${_blinfo.isAdvertising}',
