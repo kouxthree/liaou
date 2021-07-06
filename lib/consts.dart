@@ -1,5 +1,5 @@
 class Consts {
-  static const COM = "com.liao";
+  static const COM = "com.liaou";
   static const APP_NAME = "Liao U";
   static const HOME_PAGE = "Home";
   static const SETTING_PAGE = "Setting";
