@@ -30,7 +30,7 @@ class _ClientState extends State<Client> {
   _initScanBeacon() async {
     final regions = <Region>[
       Region(
-        identifier: Consts.COM,
+        identifier: 'Consts.COM',
         //proximityUUID: '39ED98FF-FFFF-441A-802F-9C398FC199D2',
       ),
     ];

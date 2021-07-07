@@ -43,7 +43,7 @@ class _ServState extends State<Serv> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      'Transmission supported:',
+                      'Transmission supported:${_blinfo.isTransmissionSupported}',
                       overflow: TextOverflow.fade,
                     ),
                     Text(
@@ -95,16 +95,47 @@ class _ServState extends State<Serv> {
 
   //start beacon. make me visible to others
   void _startBeacon() {
+    _blinfo.beaconBroadcast
+        .setUUID(_blinfo.uuid)
+        .setMajorId(_blinfo.majorId)
+        .setMinorId(_blinfo.minorId)
+        .setTransmissionPower(_blinfo.transmissionPower)
+        .setAdvertiseMode(_blinfo.advertiseMode)
+        .setIdentifier(_blinfo.identifier)
+        .setLayout(_blinfo.layout)
+        .setManufacturerId(_blinfo.manufacturerId)
+        .setExtraData(_blinfo.extraData)
+        .start();
   }
 
   void _stopBeacon() {
+    _blinfo.beaconBroadcast.stop();
   }
 
   void _getBeaconStatus() {
+    _blinfo.beaconBroadcast
+        .checkTransmissionSupported()
+        .then((isTransmissionSupported) {
+      setState(() {
+        _blinfo.isTransmissionSupported = isTransmissionSupported;
+      });
+    });
+    _blinfo.isAdvertisingSubscription = _blinfo.beaconBroadcast
+        .getAdvertisingStateChange()
+        .listen((isAdvertising) {
+      setState(() {
+        _blinfo.isAdvertising = isAdvertising;
+        _beaconStatusBtn =
+            _getBeaconStatusBtn(_blinfo.isAdvertising ? true : false);
+      });
+    });
   }
 
   @override
   void dispose() {
     super.dispose();
+    if (_blinfo.isAdvertisingSubscription != null) {
+      _blinfo.isAdvertisingSubscription.cancel();
+    }
   }
 }
