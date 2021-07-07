@@ -39,6 +39,7 @@ dependencies:
   path_provider: ^2.0.2
   flutter_beacon: ^0.5.0
   get: ^4.1.4
+  blemulator: ^1.2.1
 
 dev_dependencies:
   flutter_test:
