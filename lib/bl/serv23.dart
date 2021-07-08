@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ble_peripheral/flutter_ble_peripheral.dart';
+import 'info23.dart';
 
 class Serv extends StatefulWidget {
   @override
@@ -7,26 +7,15 @@ class Serv extends StatefulWidget {
 }
 
 class _ServState extends State<Serv> {
-  final FlutterBlePeripheral blePeripheral = FlutterBlePeripheral();
-  final AdvertiseData _data = AdvertiseData();
-  bool _isBroadcasting = false;
-
+  late Info _blinfo = new Info(); //beacon info
   late FloatingActionButton _beaconStatusBtn; //switch beacon status button
 
   @override
   void initState() {
     super.initState();
-
-    _data.includeDeviceName = true;
-    _data.uuid = 'bf27730d-860a-4e09-889c-2d8b6a9e0fe7';
-    _data.manufacturerId = 1234;
-    _data.timeout = 1000;
-    _data.manufacturerData = [1, 2, 3, 4, 5, 6];
-    _data.txPowerLevel = AdvertisePower.ADVERTISE_TX_POWER_ULTRA_LOW;
-    _data.advertiseMode = AdvertiseMode.ADVERTISE_MODE_LOW_LATENCY;
-
     _getBeaconStatus();
-    _beaconStatusBtn = _getBeaconStatusBtn(_isBroadcasting ? true : false);
+    _beaconStatusBtn =
+        _getBeaconStatusBtn(_blinfo.isAdvertising ? true : false);
   }
 
   @override
@@ -54,11 +43,11 @@ class _ServState extends State<Serv> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      'uuid:${_data.uuid}',
+                      'Transmission supported:${_blinfo.isTransmissionSupported}',
                       overflow: TextOverflow.fade,
                     ),
                     Text(
-                      'Beacon started: ${_isBroadcasting}',
+                      'Beacon started: ${_blinfo.isAdvertising}',
                       overflow: TextOverflow.ellipsis,
                     ),
                   ],
@@ -94,7 +83,7 @@ class _ServState extends State<Serv> {
 
   //start or stop beacon. make visible or invisible to others
   void _switchBeaconStatus() {
-    if (_isBroadcasting) {
+    if (_blinfo.isAdvertising) {
       //visible -> invisible
       _stopBeacon();
     } else {
@@ -105,30 +94,48 @@ class _ServState extends State<Serv> {
   }
 
   //start beacon. make me visible to others
-  void _startBeacon() async {
-    await blePeripheral.start(_data);
-    setState(() {
-      _isBroadcasting = true;
-    });
+  void _startBeacon() {
+    _blinfo.beaconBroadcast
+        .setUUID(_blinfo.uuid)
+        .setMajorId(_blinfo.majorId)
+        .setMinorId(_blinfo.minorId)
+        .setTransmissionPower(_blinfo.transmissionPower)
+        .setAdvertiseMode(_blinfo.advertiseMode)
+        .setIdentifier(_blinfo.identifier)
+        .setLayout(_blinfo.layout)
+        .setManufacturerId(_blinfo.manufacturerId)
+        .setExtraData(_blinfo.extraData)
+        .start();
   }
 
-  void _stopBeacon() async {
-    await blePeripheral.stop();
-    setState(() {
-      _isBroadcasting = false;
-    });
+  void _stopBeacon() {
+    _blinfo.beaconBroadcast.stop();
   }
 
-  void _getBeaconStatus() async {
-    var isAdvertising = await blePeripheral.isAdvertising();
-    setState(() {
-      _isBroadcasting = isAdvertising;
+  void _getBeaconStatus() {
+    _blinfo.beaconBroadcast
+        .checkTransmissionSupported()
+        .then((isTransmissionSupported) {
+      setState(() {
+        _blinfo.isTransmissionSupported = isTransmissionSupported;
+      });
+    });
+    _blinfo.isAdvertisingSubscription = _blinfo.beaconBroadcast
+        .getAdvertisingStateChange()
+        .listen((isAdvertising) {
+      setState(() {
+        _blinfo.isAdvertising = isAdvertising;
+        _beaconStatusBtn =
+            _getBeaconStatusBtn(_blinfo.isAdvertising ? true : false);
+      });
     });
   }
 
   @override
   void dispose() {
     super.dispose();
-    _stopBeacon();
+    if (_blinfo.isAdvertisingSubscription != null) {
+      _blinfo.isAdvertisingSubscription.cancel();
+    }
   }
 }
